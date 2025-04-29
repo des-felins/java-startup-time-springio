@@ -1635,6 +1635,14 @@ image: pics/Bg_21.png
 2189.3 
 2189.3 Fatal error: org.graalvm.compiler.debug.GraalError: org.graalvm.compiler.core.common.PermanentBailoutException: Compilation exceeded 300.000000 seconds during CFG traversal
 2189.3  at method: Future io.netty.resolver.AbstractAddressResolver.resolve(SocketAddress)  [Virtual call from Object AddressResolverGroupMetrics$DelegatingAddressResolver$$Lambda/0x60e14e76cf1bdb337c1b0dbb92d2d481fd9de99e0.get(), callTarget Future AddressResolver.resolve(SocketAddress)]
+========================================================================================================================
+2189.3 Finished generating 'bot' in 10m 17s.
+2190.5 [INFO] ------------------------------------------------------------------------
+2190.5 [INFO] BUILD FAILURE
+2190.5 [INFO] ------------------------------------------------------------------------
+2190.5 [INFO] Total time:  36:26 min
+2190.5 [INFO] Finished at: 2025-04-15T11:28:49Z
+2190.5 [INFO] ------------------------------------------------------------------------
 ```
 <br>
 
@@ -1652,11 +1660,182 @@ h1 {
 </style>
 
 
+---
+layout: image
+image: pics/bg-0.png
+---
+
+[A bug?](https://github.com/abertschi/graalphp/pull/39)<br>
+
+<img src="/pics/bailout-ex.png"/>
+
+<br>
+
+<v-click><b>🤔 Doesn't look like MY problem</b></v-click>
 
 
+<style>
+h1 {
+    font-size: 44px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+</style>
 
 
+---
+layout: image
+image: pics/bg-0.png
+---
+The process is so slow it fails.<br>
+[Wrong Colima settings](https://github.com/abiosoft/colima/issues/204)<br>
 
+<img src="/pics/colima-ex.png"/>
+
+➡️ Switching from ```colima start --vm-type=vz``` to ```colima start --vm-type=qemu``` should do the trick.
+
+<br>
+
+<v-click><b>Fingers crossed or what?</b></v-click>
+
+
+<style>
+h1 {
+    font-size: 44px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+</style>
+
+---
+layout: image
+image: pics/Bg_21.png
+---
+
+# Oops!
+<br><br><br><br>
+```bash{all|10,12,21}
+520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
+520.7 ------------------------------------------------------------------------------------------------------------------------
+520.7                       53.2s (13.5% of total time) in 2385 GCs | Peak RSS: 6.77GB | CPU load: 3.36
+520.7 ------------------------------------------------------------------------------------------------------------------------
+520.7 Produced artifacts:
+520.7  /app/bot-assistant/target/native/svm_err_b_20250415T153317.420_pid287.md (build_info)
+520.7 ========================================================================================================================
+520.7 Failed generating 'bot' after 6m 32s.
+520.7 
+520.7 The build process encountered an unexpected error:
+520.7 
+520.7 > java.lang.RuntimeException: There was an error linking the native image: Linker command exited with 1
+520.7 
+520.7 Linker command executed:
+520.7 /usr/bin/gcc -z noexecstack -Wl,--gc-sections -Wl,--version-script,/tmp/SVM-10923554795000531792/exported_symbols.list -no-pie -Wl,-x -o /app/bot-assistant/target/native/bot bot.o /usr/lib/jvm/liberica-nik-23-21/lib/svm/clibraries/linux-aarch64/liblibchelper.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libnet.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libextnet.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libnio.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libmanagement_ext.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libjava.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libzip.a /usr/lib/jvm/liberica-nik-23-21/lib/svm/clibraries/linux-aarch64/libjvm.a -Wl,--export-dynamic -v -L/tmp/SVM-10923554795000531792 -L/usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl -L/usr/lib/jvm/liberica-nik-23-21/lib/svm/clibraries/linux-aarch64 -lz -ldl -lpthread -lrt -Wl,-u,JNU_CallMethodByName -Wl,-u,JNU_CallStaticMethodByName -Wl,-u,JNU_GetEnv -Wl,-u,JNU_GetStaticFieldByName -Wl,-u,JNU_GetStringPlatformChars -Wl,-u,JNU_IsInstanceOfByName -Wl,-u,JNU_NewObjectByName -Wl,-u,JNU_NewStringPlatform -Wl,-u,JNU_ReleaseStringPlatformChars -Wl,-u,JNU_SetFieldByName -Wl,-u,JNU_ThrowArrayIndexOutOfBoundsException -Wl,-u,JNU_ThrowByName -Wl,-u,JNU_ThrowIllegalArgumentException -Wl,-u,JNU_ThrowInternalError -Wl,-u,JNU_ThrowNullPointerException -Wl,-u,JNU_ThrowOutOfMemoryError -Wl,-u,JNI_CreateJavaVM -Wl,-u,JNI_GetCreatedJavaVMs -Wl,-u,JNI_GetDefaultJavaVMInitArgs -Wl,-u,jio_fprintf -Wl,-u,jio_snprintf
+520.7 
+520.7 Linker command output:
+520.7 Using built-in specs.
+520.7 COLLECT_GCC=/usr/bin/gcc
+520.7 COLLECT_LTO_WRAPPER=/usr/libexec/gcc/aarch64-alpaquita-linux-musl/14.2.0/lto-wrapper
+520.7 Target: aarch64-alpaquita-linux-musl
+520.7 Configured with: /ws/workspace/aq-build-pkg/aports/core/gcc/src/gcc-14.2.0/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=aarch64-alpaquita-linux-musl --host=aarch64-alpaquita-linux-musl --target=aarch64-alpaquita-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-languages=c,c++,d,objc,go,fortran,ada --enable-link-serialization=2 --enable-linker-build-id --with-arch=armv8-a --with-abi=lp64 --disable-libquadmath --disable-libssp --disable-libsanitizer --disable-cet --enable-gnu-indirect-function=yes --enable-shared --enable-threads --enable-tls --with-bugurl='https://bell-sw.com/support/' --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpaquita 14.2.0'
+```
+<br>
+
+<v-click>
+<img src="/pics/crazy.png" width="300px" class="absolute right-60px bottom-50px"/>
+</v-click>
+
+<style>
+h1 {
+    font-size: 44px;
+    text-align: center;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+div {
+    bottom: 80px;
+}
+</style>
+
+
+---
+layout: image
+image: pics/bg-0.png
+---
+
+# Linking issue: musl libc lacks required tools 
+
+<br>
+
+- Option 1: add required packages (libstc++, etc.) with ```apk add```
+- <span v-mark.highlight.green="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
+
+<br>
+
+````md magic-move
+```docker {all}
+FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
+ARG project
+ENV project=${project}
+
+WORKDIR /app
+ADD ${project} /app/${project}
+ADD ../pom.xml ./
+RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
+
+FROM bellsoft/alpaquita-linux-base:stream-musl
+ARG project
+ENV project=${project}
+
+RUN apk add curl
+WORKDIR /app
+ENTRYPOINT ["/app/app"]
+COPY --from=builder /app/${project}/target/native/${project} /app/app
+```
+```docker {1,10}
+FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc as builder
+ARG project
+ENV project=${project}
+
+WORKDIR /app
+ADD ${project} /app/${project}
+ADD ../pom.xml ./
+RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
+
+FROM bellsoft/alpaquita-linux-base:stream-glibc
+ARG project
+ENV project=${project}
+
+RUN apk add curl
+WORKDIR /app
+ENTRYPOINT ["/app/app"]
+COPY --from=builder /app/${project}/target/native/${project} /app/app
+```
+````
+<br>
+
+<v-click><b>I feel we are getting close...</b></v-click>
+
+
+<style>
+h1 {
+    font-size: 44px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+</style>
+
+---
+class: text-center
+layout: cover
+background: pics/Bg-1.png
+---
+
+# We did it!
+
+## <v-click>Both services compile and run successfully</v-click>
 
 
 ---
@@ -1725,6 +1904,24 @@ Image size (sum): 411 MB -> 489 MB<br>
 +15 %
 </v-click>
 
+
+---
+class: text-center
+layout: cover
+background: pics/bg-0.png
+---
+
+<img src="/pics/frodo.png" class="center"/>
+
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 
 ---
