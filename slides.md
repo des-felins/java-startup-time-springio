@@ -475,8 +475,8 @@ WORKDIR /app
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 COPY --from=builder /app/${project}/target/*.jar /app/app.jar
 ```
-```docker {11,16,17|24,25,26,27|28,29|23}
-FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
+```docker {11,16,17|20,26-29|30,31|24,25}
+FROM bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl as builder
 
 ARG project
 ENV project=${project}
@@ -486,25 +486,27 @@ ADD ${project} /app/${project}
 ADD ../pom.xml ./
 RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
 
-FROM bellsoft/liberica-runtime-container:jre-21-cds-musl as optimizer
+FROM bellsoft/liberica-runtime-container:jre-21.0.7_9-cds-musl as optimizer
 ARG project
 ENV project=${project}
 
 WORKDIR /app
 COPY --from=builder /app/${project}/target/*.jar app.jar
-RUN java -Djarmode=tools -jar app.jar extract --layers --launcher
+RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
-FROM bellsoft/liberica-runtime-container:jre-21-cds-musl
+
+FROM bellsoft/liberica-runtime-container:jre-21.0.7_9-cds-musl
 
 RUN apk add curl
 WORKDIR /app
-ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:SharedArchiveFile=application.jsa", "org.springframework.boot.loader.launch.JarLauncher"]
-COPY --from=optimizer /app/app/dependencies/ ./
-COPY --from=optimizer /app/app/spring-boot-loader/ ./
-COPY --from=optimizer /app/app/snapshot-dependencies/ ./
-COPY --from=optimizer /app/app/application/ ./
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:SharedArchiveFile=application.jsa", \
+"-jar", "/app/app.jar"]
+COPY --from=optimizer /app/extracted/dependencies/ ./
+COPY --from=optimizer /app/extracted/spring-boot-loader/ ./
+COPY --from=optimizer /app/extracted/snapshot-dependencies/ ./
+COPY --from=optimizer /app/extracted/application/ ./
 RUN java -Dspring.aot.enabled=true -XX:ArchiveClassesAtExit=./application.jsa \
--Dspring.context.exit=onRefresh org.springframework.boot.loader.launch.JarLauncher
+-Dspring.context.exit=onRefresh -jar /app/app.jar
 ```
 ````
 
@@ -521,14 +523,15 @@ chat-api-1       | Started ChatApiApplication in 2.83 seconds (process running f
 ```
 ```bash {all}
 docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 1.317 seconds (process running for 1.536)
+bot-assistant-1  | Started BotAssistantApplication in 1.19 seconds (process running for 1.416)
 chat-api-1       | Started ChatApiApplication in 1.721 seconds (process running for 1.887)
+
 ```
 ````
 <br>
 <v-click at="1">
-Startup time (sum): 6.65 s -> 3.42 s<br>
--48 %
+Startup time (sum): 6.65 s -> 3.3 s<br>
+-50 %
 </v-click>
 <br><br>
 
@@ -541,15 +544,15 @@ d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66
 ```
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O       PIDS 
-51cac621a779   hero-guide-chat-api-1        0.53%     256.1MiB / 15.59GiB   1.60%     15.1kB / 8.34kB  0B / 225kB      46 
-a020f5e32c2c   hero-guide-bot-assistant-1   0.52%     241.9MiB / 15.59GiB   1.52%     85.3kB / 2.76kB  0B / 242kB      40 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O        PIDS 
+2a937f492bdb   hero-guide-chat-api-1        0.40%     221.7MiB / 15.59GiB   1.39%     16.6kB / 8.84kB   0B / 164kB       46 
+48a758a1a974   hero-guide-bot-assistant-1   0.42%     208.9MiB / 15.59GiB   1.31%     96.4kB / 3.01kB   0B / 193kB       40 
 ```
 ````
 <br>
 <v-click at="2">
-Memory usage (sum): ~ 522.5 MiB -> 498 MiB <br>
--4 %
+Memory usage (sum): ~ 522.5 MiB -> 429 MiB <br>
+-17.8 %
 </v-click>
 <br><br>
 
@@ -563,15 +566,15 @@ hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ag
 ```bash {all}
 docker images
 REPOSITORY                                 TAG       IMAGE ID       CREATED         SIZE
-hero-guide-chat-api                        latest    196046885842   3 minutes ago   283MB
-hero-guide-bot-assistant                   latest    7f5b7ba8d8cd   5 minutes ago   292MB
+hero-guide-chat-api                        latest    196046885842   3 minutes ago   288MB
+hero-guide-bot-assistant                   latest    7f5b7ba8d8cd   5 minutes ago   300MB
 ```
 ````
 
 <br>
 <v-click at="3">
-Image size (sum): 411 MB -> 575 MB<br>
-+39 %
+Image size (sum): 411 MB -> 588 MB<br>
++30 %
 </v-click>
 
 ---
@@ -580,7 +583,7 @@ layout: cover
 background: pics/Bg-4.png
 ---
 
-# Second hero:
+# The Sage:
 
 <br>
 
@@ -712,12 +715,13 @@ layout: image
 image: pics/bg-0.png
 ---
 
-```docker {none|1,4,5,|7,12,15,18|20,23,24,27|29,36-40|42,43|34}{maxHeight:'600px'}
+```docker {none|1,4,5,6|8,12,15,18|20,24,25,28|30,33-37|39,40|42}{maxHeight:'600px'}
 FROM bellsoft/alpaquita-linux-base:glibc AS downloader
 
 RUN apk add curl tar
-RUN curl https://download.java.net/java/early_access/leyden/2/openjdk-24-leyden+2-8_linux-x64_bin.tar.gz -o /java.tar.gz
-RUN cd / && tar -zxvf java.tar.gz && mv /jdk-24 /java
+RUN curl https://download.java.net/java/early_access/leyden/2/openjdk-24-leyden+2-8_linux-x64_bin.tar.gz -o /java.tar.gz && \
+    cd / && tar -zxvf java.tar.gz && mv /jdk-24 /java && \
+    rm -f /java.tar.gz
 
 FROM bellsoft/alpaquita-linux-base:glibc AS builder
 ARG project
@@ -739,23 +743,23 @@ COPY --from=builder /app/${project}/target/*.jar app.jar
 COPY --from=downloader /java /java
 ENV project=${project}
 
-RUN /java/bin/java -Djarmode=tools -jar app.jar extract --layers --launcher
+RUN /java/bin/java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
 FROM bellsoft/alpaquita-linux-base:glibc AS runner
 
 RUN apk add curl
 WORKDIR /app
 
-ENTRYPOINT ["/java/bin/java", "-XX:CacheDataStore=./application.cds", "org.springframework.boot.loader.launch.JarLauncher"]
-
 COPY --from=downloader /java /java
-COPY --from=optimizer /app/app/dependencies/ ./
-COPY --from=optimizer /app/app/spring-boot-loader/ ./
-COPY --from=optimizer /app/app/snapshot-dependencies/ ./
-COPY --from=optimizer /app/app/application/ ./
+COPY --from=optimizer /app/extracted/dependencies/ ./
+COPY --from=optimizer /app/extracted/spring-boot-loader/ ./
+COPY --from=optimizer /app/extracted/snapshot-dependencies/ ./
+COPY --from=optimizer /app/extracted/application/ ./
 
 RUN /java/bin/java -XX:CacheDataStore=./application.cds \
--Dspring.context.exit=onRefresh org.springframework.boot.loader.launch.JarLauncher
+    -Dspring.context.exit=onRefresh -jar /app/app.jar
+
+ENTRYPOINT ["/java/bin/java", "-XX:CacheDataStore=./application.cds", "-jar", "/app/app.jar"]
 ```
 
 ---
@@ -776,8 +780,8 @@ docker compose logs chat-api bot-assistant | grep Started
 ````
 <br>
 <v-click at="1">
-Startup time (sum): 6.65 s -> 3.42 s<br>
--48 %
+Startup time (sum): 6.65 s ->  s<br>
+- %
 </v-click>
 <br><br>
 
@@ -797,8 +801,8 @@ CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM 
 
 <br>
 <v-click at="2">
-Memory usage (sum): ~ 522.5 MiB -> 498 MiB <br>
--4 %
+Memory usage (sum): ~ 522.5 MiB -> MiB <br>
+- %
 </v-click>
 <br><br>
 
@@ -818,8 +822,8 @@ REPOSITORY                                 TAG       IMAGE ID       CREATED     
 
 <br>
 <v-click at="3">
-Image size (sum): 411 MB -> 575 MB<br>
-+39 %
+Image size (sum): 411 MB -> MB<br>
++ %
 </v-click>
 
 
@@ -1934,7 +1938,7 @@ background: pics/Bg-4.png
 
 <br>
 
-## <v-click>"We need drastic changes to stay ahead of the game!"</v-click>
+## <v-click>"We need drastic changes, I won't settle for half-measures!"</v-click>
 
 <style>
 h2 {
