@@ -8,15 +8,22 @@ drawings:
   persist: false
 selectable: true
 remoteAssets: true
-canvasWidth: 1200
+canvasWidth: 800
 colorSchema: 'dark'
 ---
 
-# Four Approaches to Reducing Java Startup Time:
+## Four Approaches to Reducing Java Startup Time:
 
-# AppCDS, Native Image, Project Leyden, CRaC
+## AppCDS, Native Image, Project Leyden, CRaC
 
 <img src="/pics/bellsoft.png" width="200px" class="absolute right-10px bottom-5px"/>
+
+<style>
+h2 {
+    font-size: 40px;
+    line-height: 1.2;
+}
+</style>
 
 ---
 layout: image-right
@@ -38,7 +45,7 @@ image: 'pics/cat.jpg'
 <style>
 
 div {
-    font-size: 30px;
+    font-size: 20px;
 }
 img {
 float: left;
@@ -63,7 +70,7 @@ image: 'pics/pasha.jpeg'
 
 <style>
 div {
-    font-size: 30px;
+    font-size: 20px;
 }
 img {
 float: left;
@@ -84,10 +91,10 @@ background: pics/cat_pasha.png
 <style>
 h1 {
     position: relative;
-    bottom: 200px;
+    bottom: 100px;
 }
 h2 {
-    font-size: 48px;
+    font-size: 30px;
     position: relative;
     bottom: 50px;
 }
@@ -99,7 +106,6 @@ image: 'pics/logo1.png'
 ---
 
 # About BellSoft
-<br>
 
 
 * Liberica JDK Vendor
@@ -112,19 +118,23 @@ image: 'pics/logo1.png'
 <br>
 Liberica is the JDK officially recommended by <img src="/pics/logos/spring.svg" width="30px"/>
 
-<br><br>
+<br>
 <v-click><b>We know what's up!</b></v-click>
 
 <style>
 h1 {
     font-weight: bold;
-    font-size: 44px;
+    font-size: 30px;
     color: #FFFFFF;
 }
+
+ul {
+    font-size: 14px;
+}
+
 div {
     background-image: url("pics/Bg-18.png");
     background-size: 100%;
-    font-size: 26px;
 }
 img {
 display: inline-block;
@@ -146,7 +156,7 @@ background: pics/Bg-1.png
 <style>
 h1 {
     position: relative;
-    bottom: 200px;
+    bottom: 100px;
     font-weight: bold;
     color: #FFFFFF;
 }
@@ -154,7 +164,7 @@ h2 {
     color: #FFFFFF;
     font-size: 36px;
     position: relative;
-    bottom: 50px;
+    bottom: 30px;
 }
 div {
         font-size: 36px;
@@ -167,28 +177,68 @@ layout: cover
 background: pics/Bg-1.png
 ---
 
-# But first, a quick question:
+# But first, four quick questions ;)
 
-<v-click>
+---
+class: text-center
+layout: cover
+background: pics/Bg-1.png
+---
 
-## Who knows how to reduce the startup time
-
-<br>
-
-## of their Spring application?
-
-</v-click>
+## Who knows one way to reduce the startup of their Java application?
 
 <style>
-h1 {
-    position: relative;
-    bottom: 200px;
-}
 h2 {
-    color: #FFFFFF;
-    font-size: 46px;
-    position: relative;
-    bottom: 50px;
+    font-size: 40px;
+    line-height: 1.2;
+}
+</style>
+
+
+---
+class: text-center
+layout: cover
+background: pics/Bg-1.png
+---
+
+## Who knows two ways to reduce the startup of their Java application?
+
+<style>
+h2 {
+    font-size: 40px;
+    line-height: 1.2;
+}
+</style>
+
+
+---
+class: text-center
+layout: cover
+background: pics/Bg-1.png
+---
+
+## Who knows three ways to reduce the startup of their Java application?
+
+<style>
+h2 {
+    font-size: 40px;
+    line-height: 1.2;
+}
+</style>
+
+
+---
+class: text-center
+layout: cover
+background: pics/Bg-1.png
+---
+
+## Who knows four ways to reduce the startup of their Java application?
+
+<style>
+h2 {
+    font-size: 40px;
+    line-height: 1.2;
 }
 </style>
 
@@ -198,37 +248,43 @@ layout: cover
 background: pics/Bg-1.png
 ---
 
-# Once upon a time...
-
----
-layout: image
-image: pics/Bg_18.png
----
-
-# Something is rotten in our cloud infrastructure!
-
-<br>
-
-<div v-click class="text-xl"> Inflated cloud bills: management is not happy </div>
-<br>
-<div v-click class="text-xl"> Services eat away at resources </div>
-<br>
-<div v-click class="text-xl"> Scaling is a nightmare </div>
-<br><br><br>
-<div v-click class="text-xl"><b> Maybe Java is not cut out for the cloud? </b></div>
-<br>
-<div v-click class="text-xl"><b> Maybe it's not too late to migrate to Go? </b></div>
-
+## Once upon a time, all was well in one enterprise... 
 
 <style>
 h1 {
-    font-weight: bold;
+    font-size: 30px;
+    line-height: 1.2;
+}
+</style>
+
+
+---
+layout: image
+image: pics/Bg-6-r.png
+---
+
+# Our startup is doing well!
+
+<br>
+
+- Cutting-edge tech:
+  - Java 21 LTS
+  - Spring Boot 3.4
+  - Spring AI
+  - MongoDB, Redis
+  - JTE
+- Deploying to the cloud
+
+<style>
+h1 {
     font-size: 34px;
+    text-align: left;
+    font-weight: bold;
     color: #FFFFFF;
 }
-
-div {
-    font-size: 26px;
+ul {
+    text-align: left;
+    font-size: 20px;
 }
 </style>
 
@@ -237,15 +293,11 @@ layout: image
 image: pics/Bg-6.png
 ---
 
-# Four heroes, one story.
+# Starting point: `Dockerfile`
 
 <br>
 
-## Starting point: `Dockerfile`
-
-<br><br>
-
-```docker {none|1|8|10|17|14|all}
+```docker {none|1|8|10|17|14|all}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
 ARG project
 ENV project=${project}
@@ -267,7 +319,7 @@ COPY --from=builder /app/${project}/target/*.jar /app/app.jar
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: right;
     font-weight: bold;
     color: #FFFFFF;
@@ -283,13 +335,9 @@ layout: image
 image: pics/Bg-6.png
 ---
 
-# Four heroes, one story.
+# Starting point: Startup, Mem usage, image size
 
 <br>
-
-## Starting point: Startup, Mem usage, image size
-
-<br><br>
 
 ````md magic-move
 ```bash {1|2|3|all}
@@ -299,9 +347,9 @@ chat-api-1       | Started ChatApiApplication in 2.83 seconds (process running f
 ```
 ```bash {1|3|4|all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O       PIDS 
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%     236kB / 1MB      0B / 1.41MB     48 
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%     1.6MB / 42kB     0B / 1.47MB     41 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM % 
+d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
+49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
 ```
 ```bash {1|3|4|all}
 docker images
@@ -310,22 +358,74 @@ hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ag
 hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
 ```
 ````
-<br><br>
-<span v-click="12">What can we do about that?</span>
 
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: right;
     font-weight: bold;
     color: #FFFFFF;
 }
-h2 {
-    text-align: right;
-}
-div {
+</style>
+
+
+---
+layout: image
+image: pics/Bg-6-r.png
+---
+
+# We are growing!
+
+<br>
+
+- So many new users!
+- Scale the services to meet the traffic
+
+<br>
+
+<div v-click class="text-xl"> But wait... </div>
+<br>
+<div v-click class="text-xl"> Why are we paying so much? </div>
+
+<style>
+h1 {
     font-size: 34px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+ul {
+    text-align: left;
+    font-size: 20px;
+}
+</style>
+
+---
+layout: image
+image: pics/Bg_18.png
+---
+
+# Something is rotten in our cloud infrastructure!
+
+
+<div v-click class="text-xl"> Inflated cloud bills: management is not happy </div>
+<div v-click class="text-xl"> Services eat away at resources </div>
+<div v-click class="text-xl"> Scaling is a nightmare </div>
+<br><br><br>
+<div v-click class="text-xl"><b> Maybe Java is not cut out for the cloud? </b></div>
+<div v-click class="text-xl"><b> Maybe it's not too late to migrate to Go? </b></div>
+
+
+<style>
+h1 {
+    font-weight: bold;
+    font-size: 34px;
+    color: #FFFFFF;
+}
+
+div {
+    font-size: 20px;
 }
 </style>
 
@@ -336,15 +436,27 @@ layout: cover
 background: pics/Bg-4.png
 ---
 
-# First hero:
+# Four heroes, one story 
+
+---
+layout: image
+image: pics/Bg-4.png
+---
+
+> # "I want painless integration, no incompatibilities!"
 
 <br>
 
-## <v-click>"I want painless integration, no incompatibilities!"</v-click>
+The Defender
 
 <style>
-h2 {
-font-size: 36px;
+h1 {
+font-size: 40px;
+color: #FFFFFF;
+}
+div {
+    font-size: 24px;
+    text-align: right;
 }
 </style>
 
@@ -578,20 +690,24 @@ Image size (sum): 411 MB -> 588 MB<br>
 </v-click>
 
 ---
-class: text-center
-layout: cover
-background: pics/Bg-4.png
+layout: image
+image: pics/Bg-4.png
 ---
 
-# The Sage:
+> # "We need to prepare ourselves and gather knowledge!"
 
 <br>
 
-## <v-click>"We need to prepare ourselves and gather knowledge!"</v-click>
+The Sage
 
 <style>
-h2 {
-font-size: 36px;
+h1 {
+font-size: 40px;
+color: #FFFFFF;
+}
+div {
+    font-size: 24px;
+    text-align: right;
 }
 </style>
 
@@ -828,20 +944,24 @@ Image size (sum): 411 MB -> MB<br>
 
 
 ---
-class: text-center
-layout: cover
-background: pics/Bg-4.png
+layout: image
+image: pics/Bg-4.png
 ---
 
-# Third hero:
+> # "I found something exciting... Can't wait to explore!"
 
 <br>
 
-## <v-click>"I found something exciting... Can't wait to explore!"</v-click>
+The Explorer
 
 <style>
-h2 {
-font-size: 36px;
+h1 {
+font-size: 40px;
+color: #FFFFFF;
+}
+div {
+    font-size: 24px;
+    text-align: right;
 }
 </style>
 
@@ -1929,19 +2049,23 @@ background: pics/bg-0.png
 
 
 ---
-class: text-center
-layout: cover
-background: pics/Bg-4.png
+layout: image
+image: pics/Bg-4.png
 ---
 
-# Fourth hero:
+> # "We need drastic changes, I won't settle for half-measures!"
 
 <br>
 
-## <v-click>"We need drastic changes, I won't settle for half-measures!"</v-click>
+The Rebel
 
 <style>
-h2 {
-font-size: 36px;
+h1 {
+font-size: 40px;
+color: #FFFFFF;
+}
+div {
+    font-size: 24px;
+    text-align: right;
 }
 </style>
