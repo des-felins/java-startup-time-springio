@@ -467,7 +467,6 @@ image: pics/Bg-12-r.png
 
 # Problem
 
-<br>
 
 - Application uses thousands of classes
 - Classes are loaded every time the app starts
@@ -475,18 +474,21 @@ image: pics/Bg-12-r.png
 - The process repeats upon each start!
 
 <br>
-<v-click>DRY!</v-click>
+<v-click><b>DRY!</b></v-click>
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
@@ -498,7 +500,6 @@ image: pics/Bg-12-r.png
 
 # Solution: AppCDS
 
-<br>
 
 - Archive of JVM and application classes
 - Created dynamically upon app exit
@@ -507,14 +508,14 @@ image: pics/Bg-12-r.png
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
 }
 </style>
 
@@ -525,10 +526,7 @@ image: pics/Bg-12-r.png
 
 # AppCDS: Any Considerations?
 
-<br>
 
-Very few constraints:
-<br><br>
 - Use the same JVM
 - Use the same classpath
 - Bigger Docker image due to the archive
@@ -537,14 +535,18 @@ Very few constraints:
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
+ul {
+    text-align: left;
+    font-size: 24px;
+}
 div {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
 }
 </style>
 
@@ -553,7 +555,6 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
 ```{7,8,9}
 <plugin>
     <groupId>org.springframework.boot</groupId>
@@ -568,26 +569,13 @@ image: pics/bg-0.png
     </executions>
 </plugin>
 ```
-```docker {all}
-FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
-ARG project
-ENV project=${project}
 
-WORKDIR /app
-ADD ${project} /app/${project}
-ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
+---
+layout: image
+image: pics/bg-0.png
+---
 
-FROM bellsoft/liberica-runtime-container:jre-21-musl
-ARG project
-ENV project=${project}
-
-RUN apk add curl
-WORKDIR /app
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-COPY --from=builder /app/${project}/target/*.jar /app/app.jar
-```
-```docker {11,16,17|20,26-29|30,31|24,25}
+```docker {1,9|11,16,17|20,26-29|30,31|24,25}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl as builder
 
 ARG project
@@ -620,7 +608,6 @@ COPY --from=optimizer /app/extracted/application/ ./
 RUN java -Dspring.aot.enabled=true -XX:ArchiveClassesAtExit=./application.jsa \
 -Dspring.context.exit=onRefresh -jar /app/app.jar
 ```
-````
 
 ---
 layout: image
@@ -645,28 +632,38 @@ chat-api-1       | Started ChatApiApplication in 1.721 seconds (process running 
 Startup time (sum): 6.65 s -> 3.3 s<br>
 -50 %
 </v-click>
-<br><br>
+
+
+---
+layout: image
+image: pics/bg-0.png
+---
+
 
 ````md magic-move
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O       PIDS 
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%     236kB / 1MB      0B / 1.41MB     48 
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%     1.6MB / 42kB     0B / 1.47MB     41 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM % 
+d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66% 
+49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
 ```
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O        PIDS 
-2a937f492bdb   hero-guide-chat-api-1        0.40%     221.7MiB / 15.59GiB   1.39%     16.6kB / 8.84kB   0B / 164kB       46 
-48a758a1a974   hero-guide-bot-assistant-1   0.42%     208.9MiB / 15.59GiB   1.31%     96.4kB / 3.01kB   0B / 193kB       40 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
+2a937f492bdb   hero-guide-chat-api-1        0.40%     221.7MiB / 15.59GiB   1.39%
+48a758a1a974   hero-guide-bot-assistant-1   0.42%     208.9MiB / 15.59GiB   1.31%
 ```
 ````
 <br>
-<v-click at="2">
+<v-click at="1">
 Memory usage (sum): ~ 522.5 MiB -> 429 MiB <br>
 -17.8 %
 </v-click>
-<br><br>
+
+---
+layout: image
+image: pics/bg-0.png
+---
 
 ````md magic-move
 ```bash {all}
@@ -684,10 +681,11 @@ hero-guide-bot-assistant                   latest    7f5b7ba8d8cd   5 minutes ag
 ````
 
 <br>
-<v-click at="3">
+<v-click at="1">
 Image size (sum): 411 MB -> 588 MB<br>
 +30 %
 </v-click>
+
 
 ---
 layout: image
@@ -705,6 +703,7 @@ h1 {
 font-size: 40px;
 color: #FFFFFF;
 }
+
 div {
     font-size: 24px;
     text-align: right;
@@ -717,8 +716,6 @@ image: pics/Bg-16.png
 ---
 
 # Problem
-
-<br>
 
 - Java's dynamism makes it powerful
 - The cost:
@@ -733,14 +730,17 @@ to another point in time?</v-click>
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
@@ -751,24 +751,26 @@ image: pics/Bg-16.png
 
 # Solution: Project Leyden
 
-<br>
 
 - Beyond AppCDS: AOT Cache
 - Shift some computations<br> from production run to earlier stage
 - Condensers: shifting, constraining,<br> and optimizing transformations
-- Flexibly choose which condensers to apply
+- Flexibly choose which condensers to<br> apply
 
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
@@ -779,7 +781,6 @@ image: pics/Bg-16.png
 
 # Project Leyden: Any Considerations?
 
-<br>
 
 - Still in the makings
 - JEP 483: Ahead-of-Time Class Loading & Linking<br> (JDK 24)
@@ -790,48 +791,27 @@ image: pics/Bg-16.png
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
----
-layout: image
-image: pics/bg-0.png
----
-
-```docker {all}
-FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
-ARG project
-ENV project=${project}
-
-WORKDIR /app
-ADD ${project} /app/${project}
-ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
-
-FROM bellsoft/liberica-runtime-container:jre-21-musl
-ARG project
-ENV project=${project}
-
-RUN apk add curl
-WORKDIR /app
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-COPY --from=builder /app/${project}/target/*.jar /app/app.jar
-```
 
 ---
 layout: image
 image: pics/bg-0.png
 ---
 
-```docker {none|1,4,5,6|8,12,15,18|20,24,25,28|30,33-37|39,40|42}{maxHeight:'600px'}
+```docker {none|1,4,5,6|8,12,15,18|20,24,25,28|30,35-39|41,42|44}{maxHeight:'300px'}
 FROM bellsoft/alpaquita-linux-base:glibc AS downloader
 
 RUN apk add curl tar
@@ -899,14 +879,18 @@ docker compose logs chat-api bot-assistant | grep Started
 Startup time (sum): 6.65 s ->  s<br>
 - %
 </v-click>
-<br><br>
+
+---
+layout: image
+image: pics/bg-0.png
+---
 
 ````md magic-move
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O       PIDS 
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%     236kB / 1MB      0B / 1.41MB     48 
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%     1.6MB / 42kB     0B / 1.47MB     41 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM % 
+d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
+49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
 ```
 ```bash {all}
 docker stats
@@ -916,11 +900,16 @@ CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM 
 ````
 
 <br>
-<v-click at="2">
+<v-click at="1">
 Memory usage (sum): ~ 522.5 MiB -> MiB <br>
 - %
 </v-click>
-<br><br>
+
+
+---
+layout: image
+image: pics/bg-0.png
+---
 
 ````md magic-move
 ```bash {all}
@@ -937,7 +926,7 @@ REPOSITORY                                 TAG       IMAGE ID       CREATED     
 ````
 
 <br>
-<v-click at="3">
+<v-click at="1">
 Image size (sum): 411 MB -> MB<br>
 + %
 </v-click>
@@ -972,7 +961,6 @@ image: pics/Bg-13.png
 
 # Problem
 
-<br>
 
 - Warmup may be much longer than startup
 - Compile and optimize code<br> at runtime -> N minutes
@@ -985,14 +973,17 @@ at build time?</v-click>
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
@@ -1003,7 +994,6 @@ image: pics/Bg-13.png
 
 # Solution: GraalVM Native Image
 
-<br>
 
 - Ahead-of-time compilation
 - Closed world assumption
@@ -1013,14 +1003,17 @@ image: pics/Bg-13.png
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
@@ -1036,7 +1029,6 @@ image: pics/Bg-13.png
 
 # Native Image: Any Considerations?
 
-<br>
 
 - Resource-demanding build process
 - Several minutes to build the image
@@ -1047,14 +1039,17 @@ image: pics/Bg-13.png
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
+ul {
     text-align: left;
-    font-size: 34px;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
 
@@ -1065,11 +1060,9 @@ image: pics/bg-0.png
 
 # First, let's try it locally
 
-<br>
-
 Build a fat JAR:
 
-```{all}
+```{all}{maxHeight:'200px'}
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -1097,7 +1090,7 @@ mvn clean package
 
 <style>
 h1 {
-    font-size: 44px;
+    font-size: 34px;
     text-align: left;
     font-weight: bold;
     color: #FFFFFF;
@@ -1125,14 +1118,6 @@ $JAVA_HOME/bin/native-image -H:ConfigurationFileDirectories=./bot-assistant/agen
 
 The image was built, let's run it!
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
 
 ---
 layout: image
@@ -1140,7 +1125,7 @@ image: pics/Bg_21.png
 ---
 
 # Oops!
-<br><br><br><br>
+<br><br><br>
 ```bash
 Exception in thread "main" java.lang.IllegalStateException: java.util.zip.ZipException: zip END header not found
         at org.springframework.boot.loader.ExecutableArchiveLauncher.<init>(ExecutableArchiveLauncher.java:57)
@@ -1163,7 +1148,6 @@ layout: image
 image: pics/bg-0.png
 ---
 
-<br>
 
 Apparently, [a known issue](https://github.com/oracle/graal/issues/7034)<br>
 
@@ -1173,23 +1157,13 @@ Apparently, [a known issue](https://github.com/oracle/graal/issues/7034)<br>
 
 <v-click><b>🤷‍♀️ Alright, let's try with a plugin.</b></v-click>
 
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
 ---
 layout: image
 image: pics/bg-0.png
 ---
 
 Add ```native``` profile:
-```{all|6,7,8|21|22-24|27-29}{maxHeight:'300px'}
+```{all|6,7,8|21|22-24|27-29}{maxHeight:'200px'}
 <profiles>
     <profile>
         <id>native</id>
@@ -1236,23 +1210,13 @@ Run
 mvn -Pnative native:compile
 ```
 
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
 ---
 layout: image
 image: pics/Bg_21.png
 ---
 
 # Oops!
-<br><br><br><br>
+<br><br><br>
 ```bash{all|1,6}
 Error: Classes that should be initialized at run time got initialized during image building:
  com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. To see why com.ctc.wstx.api.CommonConfig got initialized use --trace-class-initialization=com.ctc.wstx.api.CommonConfig
@@ -1264,7 +1228,7 @@ To see how the classes got initialized, use --trace-class-initialization=com.ctc
 <br>
 
 <v-click>
-<img src="/pics/mkay.png" width="300px" class="absolute right-60px bottom-50px"/>
+<img src="/pics/mkay.png" width="100px" class="absolute right-60px bottom-50px"/>
 </v-click>
 
 <style>
@@ -1282,7 +1246,7 @@ image: pics/bg-0.png
 ---
 
 Add the ```--trace-class-initialization``` argument:
-```{none|23}{maxHeight:'300px'}
+```{none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1337,7 +1301,7 @@ image: pics/bg-0.png
 ---
 
 More detailed output:
-```bash{all|2}{maxHeight:'300px'}
+```bash{all|2}{maxHeight:'200px'}
 Error: Classes that should be initialized at run time got initialized during image building:
  com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. org.springframework.http.codec.xml.XmlEventDecoder caused initialization of this class with the following trace:
         at com.ctc.wstx.api.CommonConfig.<clinit>(CommonConfig.java:59)
@@ -1365,19 +1329,9 @@ Error: Classes that should be initialized at run time got initialized during ima
 
 ```
 
-<br><br>
+<br>
 
 <v-click>We found the culprit!</v-click>
-
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
 
 
 ---
@@ -1386,7 +1340,7 @@ image: pics/bg-0.png
 ---
 
 Alright, let's add the option to initialize ```org.springframework.http.codec.xml.XmlEventDecoder``` at runtime:
-```{none|23}{maxHeight:'300px'}
+```{none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1424,23 +1378,13 @@ Run
 mvn -Pnative native:compile
 ```
 
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
 ---
 layout: image
 image: pics/Bg_21.png
 ---
 
 # Oops!
-<br><br><br><br>
+<br><br><br>
 ```bash{all}
 Error: Classes that should be initialized at run time got initialized during image building:
  com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. To see why com.ctc.wstx.api.CommonConfig got initialized use --trace-class-initialization=com.ctc.wstx.api.CommonConfig
@@ -1454,7 +1398,7 @@ To see how the classes got initialized, use --trace-class-initialization=com.ctc
 The same error!
 
 <v-click>
-<img src="/pics/facepalm.png" width="300px" class="absolute right-60px bottom-50px"/>
+<img src="/pics/facepalm.png" width="100px" class="absolute right-60px bottom-50px"/>
 </v-click>
 
 <style>
@@ -1483,23 +1427,13 @@ Apparently, [another known issue](https://github.com/spring-projects/spring-fram
 <v-click><b>🫡 Will do!</b></v-click>
 
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
-
 ---
 layout: image
 image: pics/bg-0.png
 ---
 
 Let's add the ```--strict-image-heap``` option:
-```{none|23}{maxHeight:'300px'}
+```{none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1565,9 +1499,8 @@ image: pics/Bg_21.png
 ---
 
 # Oops!
-<br><br><br><br>
 
-```bash
+```bash {all|3} {maxHeight:'200px'}
 2025-04-11T12:25:33.511+03:00 ERROR 64619 --- [bot-assistant] [nio-8081-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z [symbol: Java_jdk_jfr_internal_JVM_isExcluded or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]] with root cause
 
 java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z [symbol: Java_jdk_jfr_internal_JVM_isExcluded or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]
@@ -1594,11 +1527,7 @@ h1 {
     color: #FFFFFF;
 }
 h2 {
-    font-size: 34px;
-    padding-left: 80px;
-}
-div {
-    bottom: 50px;
+    font-size: 24px;
 }
 </style>
 
@@ -1609,7 +1538,7 @@ image: pics/bg-0.png
 ---
 
 Let's enable JFR:
-```{none|23}{maxHeight:'300px'}
+```{none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1665,24 +1594,20 @@ layout: cover
 background: pics/Bg-1.png
 ---
 
-# Let's move on to building a native image in a Docker container.
+## Let's move on to building a native image in a Docker container.
 
-## <v-click>Piece of cake, right? We solved all issues..</v-click>
+### <v-click>Piece of cake, right? We solved all issues..</v-click>
 
 <v-click>
-<img src="/pics/star-wars.png" width="350px" class="center"/>
+<img src="/pics/star-wars.png" width="300px" class="center"/>
 </v-click>
 
 
 <style>
-h1 {
-    position: relative;
-    bottom: 50px;
-}
 h2 {
     font-size: 34px;
     position: relative;
-    bottom: 50px;
+    bottom: 20px;
 }
 .center {
   margin-left: auto;
@@ -1695,27 +1620,7 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```docker {all}
-FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
-ARG project
-ENV project=${project}
-
-WORKDIR /app
-ADD ${project} /app/${project}
-ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
-
-FROM bellsoft/liberica-runtime-container:jre-21-musl
-ARG project
-ENV project=${project}
-
-RUN apk add curl
-WORKDIR /app
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-COPY --from=builder /app/${project}/target/*.jar /app/app.jar
-```
-```docker {1,8|10,14,17|16}
+```docker {all|1,8|10,14,17|16} {maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
 ARG project
 ENV project=${project}
@@ -1734,17 +1639,6 @@ WORKDIR /app
 ENTRYPOINT ["/app/app"]
 COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
-````
-
-<v-click>
-
-Run:
-
-```bash
-docker compose up -d --build bot-assistant
-```
-
-</v-click>
 
 
 ---
@@ -1753,7 +1647,8 @@ image: pics/Bg_21.png
 ---
 
 # Oops!
-<br><br><br><br>
+<br>
+
 ```bash{all}
 2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
 2189.3 
@@ -1771,7 +1666,7 @@ image: pics/Bg_21.png
 <br>
 
 <v-click>
-<img src="/pics/eye-roll.png" width="300px" class="absolute right-60px bottom-50px"/>
+<img src="/pics/eye-roll.png" width="100px" class="absolute right-60px bottom-50px"/>
 </v-click>
 
 <style>
@@ -1798,16 +1693,6 @@ image: pics/bg-0.png
 <v-click><b>🤔 Doesn't look like MY problem</b></v-click>
 
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
-
 ---
 layout: image
 image: pics/bg-0.png
@@ -1824,23 +1709,15 @@ The process is so slow it fails.<br>
 <v-click><b>Fingers crossed or what?</b></v-click>
 
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
 ---
 layout: image
 image: pics/Bg_21.png
 ---
 
 # Oops!
-<br><br><br><br>
-```bash{all|10,12,21}
+<br>
+
+```bash{all|10,12,21}{maxHeight:'200px'}
 520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
 520.7 ------------------------------------------------------------------------------------------------------------------------
 520.7                       53.2s (13.5% of total time) in 2385 GCs | Peak RSS: 6.77GB | CPU load: 3.36
@@ -1867,7 +1744,7 @@ image: pics/Bg_21.png
 <br>
 
 <v-click>
-<img src="/pics/crazy.png" width="300px" class="absolute right-60px bottom-50px"/>
+<img src="/pics/crazy.png" width="200px" class="absolute right-60px bottom-30px"/>
 </v-click>
 
 <style>
@@ -1877,9 +1754,6 @@ h1 {
     font-weight: bold;
     color: #FFFFFF;
 }
-div {
-    bottom: 80px;
-}
 </style>
 
 
@@ -1888,7 +1762,7 @@ layout: image
 image: pics/bg-0.png
 ---
 
-# Linking issue: musl libc lacks required tools 
+## Linking issue: musl libc lacks required tools 
 
 <br>
 
@@ -1897,27 +1771,7 @@ image: pics/bg-0.png
 
 <br>
 
-````md magic-move
-```docker {all}
-FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
-ARG project
-ENV project=${project}
-
-WORKDIR /app
-ADD ${project} /app/${project}
-ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
-
-FROM bellsoft/alpaquita-linux-base:stream-musl
-ARG project
-ENV project=${project}
-
-RUN apk add curl
-WORKDIR /app
-ENTRYPOINT ["/app/app"]
-COPY --from=builder /app/${project}/target/native/${project} /app/app
-```
-```docker {1,10}
+```docker {all|1,10}{maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc as builder
 ARG project
 ENV project=${project}
@@ -1936,20 +1790,9 @@ WORKDIR /app
 ENTRYPOINT ["/app/app"]
 COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
-````
-<br>
-
-<v-click><b>I feel we are getting close...</b></v-click>
 
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
+<v-click>I feel we are getting close...</v-click>
 
 ---
 class: text-center
@@ -1960,7 +1803,6 @@ background: pics/Bg-1.png
 # We did it!
 
 ## <v-click>Both services compile and run successfully</v-click>
-
 
 ---
 layout: image
@@ -1984,28 +1826,36 @@ chat-api-1       | Started ChatApiApplication in 0.397 seconds (process running 
 Startup time (sum): 6.65 s -> 1.44 s<br>
 -78 %
 </v-click>
-<br><br>
+
+---
+layout: image
+image: pics/bg-0.png
+---
 
 ````md magic-move
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O       PIDS 
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%     236kB / 1MB      0B / 1.41MB     48 
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%     1.6MB / 42kB     0B / 1.47MB     41 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
+d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
+49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
 ```
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O        PIDS 
-cdb9e2555739   hero-guide-chat-api-1        0.03%     94.24MiB / 15.59GiB   0.59%     10.4kB / 6.82kB   0B / 0B          28 
-0aa86864bd06   hero-guide-bot-assistant-1   0.20%     90.71MiB / 15.59GiB   0.57%     51.8kB / 1.88kB   4.1kB / 0B       22 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
+cdb9e2555739   hero-guide-chat-api-1        0.03%     94.24MiB / 15.59GiB   0.59%
+0aa86864bd06   hero-guide-bot-assistant-1   0.20%     90.71MiB / 15.59GiB   0.57%
 ```
 ````
 <br>
-<v-click at="2">
+<v-click at="1">
 Memory usage (sum): ~ 522.5 MiB -> 185 MiB <br>
 -64 %
 </v-click>
-<br><br>
+
+---
+layout: image
+image: pics/bg-0.png
+---
 
 ````md magic-move
 ```bash {all}
@@ -2023,7 +1873,7 @@ hero-guide-bot-assistant                   latest    0f681e15cf08   19 minutes a
 ````
 
 <br>
-<v-click at="3">
+<v-click at="1">
 Image size (sum): 411 MB -> 489 MB<br>
 +15 %
 </v-click>
