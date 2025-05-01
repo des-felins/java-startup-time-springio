@@ -107,18 +107,17 @@ image: 'pics/logo1.png'
 
 # About BellSoft
 
-
 * Liberica JDK Vendor
 * OpenJDK Contributor
-* [TODO: logos ] Member
+* <img src="/pics/logos/openjdk.svg" width="70px"/> <img src="/pics/logos/graalvm.svg" width="70px"/> <img src="/pics/logos/cncf.svg" width="20px"/> <img src="/pics/logos/linux.svg" width="20px"/> Member
 * Alpaquita Linux Developer
 * ARM32 Java Port Author
 * Own base images
 
 <br>
-Liberica is the JDK officially recommended by <img src="/pics/logos/spring.svg" width="30px"/>
+Liberica is the JDK officially recommended by Spring
 
-<br>
+<br><br>
 <v-click><b>We know what's up!</b></v-click>
 
 <style>
@@ -137,8 +136,8 @@ div {
     background-size: 100%;
 }
 img {
-display: inline-block;
-margin-left: 5px;
+float: left;
+margin-right: 5px;
 }
 </style>
 
