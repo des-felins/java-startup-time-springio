@@ -613,25 +613,17 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 2.108 seconds (process running for 3.181)
-chat-api-1       | Started ChatApiApplication in 2.83 seconds (process running for 3.469)
-```
-```bash {all}
-docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 1.19 seconds (process running for 1.416)
-chat-api-1       | Started ChatApiApplication in 1.721 seconds (process running for 1.887)
+<img src="/pics/charts/cds-startup.svg" class="center"/>
 
-```
-````
-<br>
-<v-click at="1">
-Startup time (sum): 6.65 s -> 3.3 s<br>
--50 %
-</v-click>
 
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 ---
 layout: image
@@ -860,23 +852,17 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 2.108 seconds (process running for 3.181)
-chat-api-1       | Started ChatApiApplication in 2.83 seconds (process running for 3.469)
-```
-```bash {all}
-docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 0.879 seconds (process running for 1.16)
-chat-api-1       | Started ChatApiApplication in 1.096 seconds (process running for 1.397)
-```
-````
-<br>
-<v-click at="1">
-Startup time (sum): 6.65 s -> 2.55 s<br>
--61 %
-</v-click>
+<img src="/pics/charts/leyden-startup.svg" width="600" class="center"/>
+
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 ---
 layout: image
@@ -1810,23 +1796,17 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 2.108 seconds (process running for 3.181)
-chat-api-1       | Started ChatApiApplication in 2.83 seconds (process running for 3.469)
-```
-```bash {all}
-docker compose logs chat-api bot-assistant | grep Started
-bot-assistant-1  | Started BotAssistantApplication in 0.806 seconds (process running for 1.029)
-chat-api-1       | Started ChatApiApplication in 0.397 seconds (process running for 0.409)
-```
-````
-<br>
-<v-click at="1">
-Startup time (sum): 6.65 s -> 1.44 s<br>
--78 %
-</v-click>
+<img src="/pics/charts/native-image-startup.svg" width="600" class="center"/>
+
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 ---
 layout: image
