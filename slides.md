@@ -716,10 +716,8 @@ image: pics/Bg-16.png
 
 # Problem
 
-- Java's dynamism makes it powerful
-- The cost:
-  - Longer startup/warmup
-  - Bigger mem usage
+- AppCDS may not be enough for our purposes
+- We want faster startup and warmup
 - Not all can migrate to Native Image
 
 <br>
@@ -965,7 +963,7 @@ image: pics/Bg-13.png
 # Problem
 
 
-- Warmup may be much longer than startup
+- Need to start up in ~1 second at peak performance
 - Compile and optimize code<br> at runtime -> N minutes
 - More memory for profile data<br> and bytecode cache
 
@@ -1920,5 +1918,92 @@ color: #FFFFFF;
 div {
     font-size: 24px;
     text-align: right;
+}
+</style>
+
+
+---
+layout: image
+image: pics/Bg-11.png
+---
+
+# Problem
+
+- Unfamiliar workflow with C++ code<br> of Native Image
+- Push the limits: reduce<br> startup/warmup to milliseconds
+- Want to preserve JIT-compilation
+
+
+
+<style>
+h1 {
+    font-size: 34px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+ul {
+    text-align: left;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
+}
+</style>
+
+---
+layout: image
+image: pics/Bg-11.png
+---
+
+# Solution: Coordinated Restore at Checkpoint (CRaC)
+
+
+- Pause and restart a Java application
+- A snapshot of the current JVM state
+- JVM is still there:<br> dynamic performance optimization<br> is possible after restore
+
+
+<style>
+h1 {
+    font-size: 34px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+ul {
+    text-align: left;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
+}
+</style>
+
+---
+layout: image
+image: pics/Bg-11.png
+---
+
+# Project CRaC: Any Considerations?
+
+- A snapshot may contain sensitive data 
+- May need to augment the code<br> for reliable checkpoint and restore
+
+
+
+<style>
+h1 {
+    font-size: 34px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+ul {
+    text-align: left;
+    font-size: 24px;
+}
+div {
+    font-size: 24px;
 }
 </style>
