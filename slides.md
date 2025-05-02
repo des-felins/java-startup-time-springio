@@ -870,13 +870,14 @@ chat-api-1       | Started ChatApiApplication in 2.83 seconds (process running f
 ```
 ```bash {all}
 docker compose logs chat-api bot-assistant | grep Started
-
+bot-assistant-1  | Started BotAssistantApplication in 0.879 seconds (process running for 1.16)
+chat-api-1       | Started ChatApiApplication in 1.096 seconds (process running for 1.397)
 ```
 ````
 <br>
 <v-click at="1">
-Startup time (sum): 6.65 s ->  s<br>
-- %
+Startup time (sum): 6.65 s -> 2.55 s<br>
+-61 %
 </v-click>
 
 ---
@@ -893,15 +894,17 @@ d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66
 ```
 ```bash {all}
 docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O          BLOCK I/O       PIDS 
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O        PIDS 
+73e3b379ce87   hero-guide-chat-api-1        0.33%     274.9MiB / 15.62GiB   1.72%     7.28kB / 5.95kB   0B / 463kB       56 
+a96020d0d27d   hero-guide-bot-assistant-1   0.54%     245.6MiB / 15.62GiB   1.54%     894B / 126B       0B / 463kB       46 
 
 ```
 ````
 
 <br>
 <v-click at="1">
-Memory usage (sum): ~ 522.5 MiB -> MiB <br>
-- %
+Memory usage (sum): ~ 522.5 MiB -> 519 MiB <br>
+-0.58 %
 </v-click>
 
 
@@ -919,15 +922,16 @@ hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ag
 ```
 ```bash {all}
 docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED         SIZE
-
+REPOSITORY                                 TAG            IMAGE ID       CREATED         SIZE
+hero-guide-bot-assistant                   latest         c19d2aaa7125   2 minutes ago   586MB
+hero-guide-chat-api                        latest         e62e63a37c00   2 minutes ago   573MB
 ```
 ````
 
 <br>
 <v-click at="1">
-Image size (sum): 411 MB -> MB<br>
-+ %
+Image size (sum): 411 MB -> 1159 MB<br>
++64 %
 </v-click>
 
 
