@@ -630,52 +630,34 @@ layout: image
 image: pics/bg-0.png
 ---
 
+<img src="/pics/charts/cds-mem-usage.svg" class="center"/>
 
-````md magic-move
-```bash {all}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM % 
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66% 
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
-```
-```bash {all}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
-2a937f492bdb   hero-guide-chat-api-1        0.40%     221.7MiB / 15.59GiB   1.39%
-48a758a1a974   hero-guide-bot-assistant-1   0.42%     208.9MiB / 15.59GiB   1.31%
-```
-````
-<br>
-<v-click at="1">
-Memory usage (sum): ~ 522.5 MiB -> 429 MiB <br>
--17.8 %
-</v-click>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 ---
 layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
-hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
-hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
-```
-```bash {all}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED         SIZE
-hero-guide-chat-api                        latest    196046885842   3 minutes ago   288MB
-hero-guide-bot-assistant                   latest    7f5b7ba8d8cd   5 minutes ago   300MB
-```
-````
+<img src="/pics/charts/cds-image-size.svg" class="center"/>
 
-<br>
-<v-click at="1">
-Image size (sum): 411 MB -> 588 MB<br>
-+30 %
-</v-click>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 
 ---
@@ -794,7 +776,87 @@ div {
 }
 </style>
 
+---
+layout: image
+image: pics/bg-0.png
+---
 
+```{7,8,9}
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>process-aot</id>
+            <goals>
+                <goal>process-aot</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+---
+layout: image
+image: pics/bg-0.png
+---
+
+```docker {1,9|11,16,17|20,25-28|31,32|24}{maxHeight:'300px'}
+FROM bellsoft/liberica-runtime-container:jdk-24-stream-musl as builder
+
+ARG project
+ENV project=${project}
+
+WORKDIR /app
+ADD ${project} /app/${project}
+ADD ../pom.xml ./
+RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
+
+FROM bellsoft/liberica-runtime-container:jre-24-cds-musl as optimizer
+ARG project
+ENV project=${project}
+
+WORKDIR /app
+COPY --from=builder /app/${project}/target/*.jar app.jar
+RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
+
+
+FROM bellsoft/liberica-runtime-container:jre-24-cds-musl
+
+RUN apk add curl
+WORKDIR /app
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:AOTCache=app.aot", "-jar", "/app/app.jar"]
+COPY --from=optimizer /app/extracted/dependencies/ ./
+COPY --from=optimizer /app/extracted/spring-boot-loader/ ./
+COPY --from=optimizer /app/extracted/snapshot-dependencies/ ./
+COPY --from=optimizer /app/extracted/application/ ./
+
+
+RUN java -Dspring.aot.enabled=true -XX:AOTMode=record -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -jar /app/app.jar
+RUN java -Dspring.aot.enabled=true -XX:AOTMode=create -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar /app/app.jar
+```
+
+
+
+---
+layout: image
+image: pics/bg-0.png
+---
+
+```{7,8,9}
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>process-aot</id>
+            <goals>
+                <goal>process-aot</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
 ---
 layout: image
 image: pics/bg-0.png
@@ -852,7 +914,7 @@ layout: image
 image: pics/bg-0.png
 ---
 
-<img src="/pics/charts/leyden-startup.svg" width="600" class="center"/>
+<img src="/pics/charts/leyden-startup.svg" class="center"/>
 
 
 <style>
@@ -869,27 +931,17 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM % 
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
-```
-```bash {all}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %     NET I/O           BLOCK I/O        PIDS 
-73e3b379ce87   hero-guide-chat-api-1        0.33%     274.9MiB / 15.62GiB   1.72%     7.28kB / 5.95kB   0B / 463kB       56 
-a96020d0d27d   hero-guide-bot-assistant-1   0.54%     245.6MiB / 15.62GiB   1.54%     894B / 126B       0B / 463kB       46 
+<img src="/pics/charts/leyden-mem-usage.svg" class="center"/>
 
-```
-````
 
-<br>
-<v-click at="1">
-Memory usage (sum): ~ 522.5 MiB -> 519 MiB <br>
--0.58 %
-</v-click>
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 
 ---
@@ -897,26 +949,17 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
-hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
-hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
-```
-```bash {all}
-docker images
-REPOSITORY                                 TAG            IMAGE ID       CREATED         SIZE
-hero-guide-bot-assistant                   latest         c19d2aaa7125   2 minutes ago   586MB
-hero-guide-chat-api                        latest         e62e63a37c00   2 minutes ago   573MB
-```
-````
+<img src="/pics/charts/leyden-image-size.svg" class="center"/>
 
-<br>
-<v-click at="1">
-Image size (sum): 411 MB -> 1159 MB<br>
-+64 %
-</v-click>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 
 ---
@@ -1796,7 +1839,7 @@ layout: image
 image: pics/bg-0.png
 ---
 
-<img src="/pics/charts/native-image-startup.svg" width="600" class="center"/>
+<img src="/pics/charts/native-image-startup.svg" class="center"/>
 
 
 <style>
@@ -1813,51 +1856,34 @@ layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
-```
-```bash {all}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
-cdb9e2555739   hero-guide-chat-api-1        0.03%     94.24MiB / 15.59GiB   0.59%
-0aa86864bd06   hero-guide-bot-assistant-1   0.20%     90.71MiB / 15.59GiB   0.57%
-```
-````
-<br>
-<v-click at="1">
-Memory usage (sum): ~ 522.5 MiB -> 185 MiB <br>
--64 %
-</v-click>
+<img src="/pics/charts/native-image-mem-usage.svg" class="center"/>
+
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 ---
 layout: image
 image: pics/bg-0.png
 ---
 
-````md magic-move
-```bash {all}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
-hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
-hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
-```
-```bash {all}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED          SIZE
-hero-guide-chat-api                        latest    8614ec84e9a5   27 seconds ago   229MB
-hero-guide-bot-assistant                   latest    0f681e15cf08   19 minutes ago   260MB
-```
-````
+<img src="/pics/charts/native-image-size.svg" class="center"/>
 
-<br>
-<v-click at="1">
-Image size (sum): 411 MB -> 489 MB<br>
-+15 %
-</v-click>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+</style>
 
 
 ---
