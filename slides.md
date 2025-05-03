@@ -1,6 +1,6 @@
 ---
 theme: default
-background: /Bg-2.png
+background: /cover.png
 title: Four Approaches to Reducing Java Startup Time
 layout: cover
 class: text-center
@@ -30,28 +30,21 @@ layout: image-right
 image: '/cat.jpg'
 ---
 
-<div v-click class="text-xl"> 🐈‍⬛ Catherine Edelveis aka Cat </div>
-<br>
-<div v-click class="text-xl"> 🥑 Developer Advocate at BellSoft </div>
-<br>
-<div v-click class="text-xl"> 😍 Love Java, Spring, JavaFX </div>
-<br>
-<div v-click class="text-xl"> 👩‍💻Tech writer </div>
-<br>
-<div v-click class="text-xl"> <img src="/logos/x-2.png" width="30px"/> cat_edelveis </div>
-<br>
-<div v-click class="text-xl"> <img src="/logos/bluesky.svg" width="30px"/> cat-edelveis.bsky.social </div>
+# Catherine Edelveis
+<img/>
+<v-clicks>
+🥑 Developer Advocate at BellSoft
 
-<style>
+😍Love Java, Spring, JavaFX
 
-div {
-    font-size: 20px;
-}
-img {
-float: left;
-margin-right: 5px;
-}
-</style>
+👩‍💻Tech writer
+
+<span><line-md-twitter-x /> cat_edelveis</span>
+
+<span><logos-bluesky /> cat-edelveis.bsky.social</span>
+
+</v-clicks>
+
 
 ---
 layout: image-left
@@ -103,37 +96,14 @@ image: '/logo1.png'
 
 * Liberica JDK Vendor
 * OpenJDK Contributor
-* <img src="/logos/openjdk.svg" width="70px"/> <img src="/logos/graalvm.svg" width="70px"/> <simple-icons-cncf/> <simple-icons-linuxfoundation/> Member
+* <simple-icons-cncf/> <simple-icons-linuxfoundation/> Member
 * Alpaquita Linux Developer
 * ARM32 Java Port Author
 * Own base images
 
-<br>
-Liberica is the JDK officially recommended by Spring
+<br/>
+Liberica is the JDK officially recommended by <logos-spring-icon />
 
-<br><br>
-<v-click><b>We know what's up!</b></v-click>
-
-<style>
-h1 {
-    font-weight: bold;
-    font-size: 30px;
-    color: #FFFFFF;
-}
-
-ul {
-    font-size: 14px;
-}
-
-div {
-    background-image: url("/Bg-18.png");
-    background-size: 100%;
-}
-img {
-float: left;
-margin-right: 5px;
-}
-</style>
 
 ---
 class: text-center
@@ -253,19 +223,18 @@ h1 {
 
 ---
 layout: image
-image: /Bg-6-r.png
+image: /Bg-8.png
 ---
 
 # Our startup is doing well!
 
-<br>
+<br/>
 
-- Cutting-edge tech:
-  - Java 21 LTS
-  - Spring Boot 3.4
-  - Spring AI
-  - MongoDB, Redis
-  - JTE
+- Java 21 LTS
+- Spring Boot 3.4
+- Spring AI
+- MongoDB, Redis
+- JTE
 - Deploying to the cloud
 
 <style>
@@ -283,12 +252,12 @@ ul {
 
 ---
 layout: image
-image: /Bg-6.png
+image: /Bg-8.png
 ---
 
 # Starting point: `Dockerfile`
 
-<br>
+<br/>
 
 ```docker {none|1|8|10|17|14|all}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
@@ -310,56 +279,47 @@ ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 COPY --from=builder /app/${project}/target/*.jar /app/app.jar
 ```
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: right;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-h2 {
-    text-align: right;
-    font-size: 34px;
-}
-</style>
 
 ---
 layout: image
-image: /Bg-6.png
+image: /Bg-8.png
 ---
 
 # Starting point: Startup, Mem usage, image size
 
-<br>
-
+<br/>
 
 ```bash {1|2|3|all}
 docker compose logs chat-api bot-assistant | grep Started
 Started BotAssistantApplication in 2.108 seconds (process running for 3.181)
 Started ChatApiApplication in 2.83 seconds (process running for 3.469)
 ```
+
 ---
 layout: image
-image: /Bg-6.png
+image: /Bg-8.png
 ---
 
 # Starting point: Startup, Mem usage, image size
 
-<br>
+<br/>
+
 ```bash {1|3|4|all}
 docker stats
 CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
 d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
 49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
 ```
+
 ---
 layout: image
-image: /Bg-6.png
+image: /Bg-8.png
 ---
 
 # Starting point: Startup, Mem usage, image size
 
-<br>
+<br/>
+
 ```bash {1|3|4|all}
 docker images
 REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
@@ -367,93 +327,63 @@ hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ag
 hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
 ```
 
-
-
-<style>
-h1 {
-    font-size: 34px;
-    text-align: right;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
 ---
 layout: image
-image: /Bg-6-r.png
+image: /Bg-8.png
 ---
 
 # We are growing!
 
-<br>
+<br/>
 
 - So many new users!
 - Scale the services to meet the traffic
 
-<br>
+<br/>
 
 <div v-click class="text-xl"> But wait... </div>
-<br>
+<br/>
 <div v-click class="text-xl"> Why are we paying so much? </div>
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 20px;
-}
-</style>
 
 ---
 layout: image
-image: /Bg_18.png
+image: /Bg-8.png
 ---
 
 # Something is rotten in our cloud infrastructure!
+<br/>
+<v-clicks>
 
+Inflated cloud bills: management is not happy
 
-<div v-click class="text-xl"> Inflated cloud bills: management is not happy </div>
-<div v-click class="text-xl"> Services eat away at resources </div>
-<div v-click class="text-xl"> Scaling is a nightmare </div>
-<br><br><br>
-<div v-click class="text-xl"><b> Maybe Java is not cut out for the cloud? </b></div>
-<div v-click class="text-xl"><b> Maybe it's not too late to migrate to Go? </b></div>
+Services eat away at resources
 
+Scaling is a nightmare
 
-<style>
-h1 {
-    font-weight: bold;
-    font-size: 34px;
-    color: #FFFFFF;
-}
+<br/>
+<b> Maybe Java is not cut out for the cloud? </b>
 
-div {
-    font-size: 20px;
-}
-</style>
+<b> Maybe it's not too late to migrate to Go? </b>
+</v-clicks>
 
 
 ---
 class: text-center
 layout: cover
-background: /Bg-4.png
+background: /Bg-1.png
 ---
 
 # Four heroes, one story
 
 ---
 layout: image
-image: /Bg-4.png
+image: /Bg-8.png
 ---
 
 > # I want painless integration with no incompatibilities!
 
-<br>
+<br/>
 
 The Defender
 
@@ -470,7 +400,7 @@ div {
 
 ---
 layout: image
-image: /Bg-12-r.png
+image: /Bg-12.png
 ---
 
 # Problem
@@ -481,29 +411,14 @@ image: /Bg-12-r.png
 - Can take several seconds
 - The process repeats upon each start!
 
-<br>
+<br/>
 <v-click><b>DRY!</b></v-click>
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
 
 
 ---
 layout: image
-image: /Bg-12-r.png
+image: /Bg-12.png
 ---
 
 # Solution: AppCDS
@@ -512,24 +427,12 @@ image: /Bg-12-r.png
 - Archive of JVM and application classes
 - Created dynamically upon app exit
 - Supported since Spring Boot 3.3
-- Even better with Spring AOT <br> (load even more classes!)
+- Even better with Spring AOT <br/> (load even more classes!)
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-</style>
 
 ---
 layout: image
-image: /Bg-12-r.png
+image: /Bg-12.png
 ---
 
 # AppCDS: Any Considerations?
@@ -539,30 +442,11 @@ image: /Bg-12-r.png
 - Use the same classpath
 - Bigger Docker image due to the archive
 
-<br><br>
+<br/>
 
 <v-click>Let's take it for a spin!</v-click>
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    text-align: left;
-    font-size: 24px;
-}
-</style>
 
----
-layout: image
-image: /bg-0.png
 ---
 
 ```xml {all|7,8,9}
@@ -581,9 +465,7 @@ image: /bg-0.png
 ```
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 ```docker {1,9|11,16,17|20,26-29|30,31|24,25}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl as builder
@@ -621,64 +503,31 @@ RUN java -Dspring.aot.enabled=true -XX:ArchiveClassesAtExit=./application.jsa \
 
 ---
 layout: image
-image: /bg-0.png
+image: /charts/cds-startup.svg
 ---
 
-<img src="/charts/cds-startup.svg" class="center"/>
-
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
-
----
-layout: image
-image: /bg-0.png
----
-
-<img src="/charts/cds-mem-usage.svg" class="center"/>
-
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
-
----
-layout: image
-image: /bg-0.png
----
-
-<img src="/charts/cds-image-size.svg" class="center"/>
-
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
 
 
 ---
 layout: image
-image: /Bg-4.png
+image: /charts/cds-mem-usage.svg
+---
+
+
+---
+layout: image
+image: /charts/cds-image-size.svg
+---
+
+
+---
+layout: image
+image: /Bg-8.png
 ---
 
 > # We need to prepare ourselves and gather knowledge!
 
-<br>
+<br/>
 
 The Sage
 
@@ -696,7 +545,7 @@ div {
 
 ---
 layout: image
-image: /Bg-16.png
+image: /Bg-12.png
 ---
 
 # Problem
@@ -705,14 +554,14 @@ image: /Bg-16.png
 - We want faster startup and warmup
 - Not all can migrate to Native Image
 
-<br>
+<br/>
 
-<v-click>Shift some heavy-lifting tasks<br>
+<v-click>Shift some heavy-lifting tasks<br/>
 to another point in time?</v-click>
 
 ---
 layout: image
-image: /Bg-16.png
+image: /Bg-12.png
 ---
 
 # Solution: Project Leyden
@@ -735,13 +584,11 @@ image: /Bg-16.png
 - JEP 483: Ahead-of-Time Class Loading & Linking<br/> (JDK 24)
 - The more constraints applied,<br/> the better startup/warmup
 
-<br>
+<br/>
 <v-click>Meanwhile, we can experiment!</v-click>
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 ```xml {all|7,8,9}
 <plugin>
@@ -759,9 +606,7 @@ image: /bg-0.png
 ```
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 ```docker {1,9|11,16,17|20,25-28|31,32|24}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-24-stream-musl as builder
@@ -799,11 +644,8 @@ RUN java -Dspring.aot.enabled=true -XX:AOTMode=create -XX:AOTConfiguration=app.a
 ```
 
 
+---
 
----
-layout: image
-image: /bg-0.png
----
 
 ```xml {7,8,9}
 <plugin>
@@ -821,9 +663,7 @@ image: /bg-0.png
 ```
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 ```docker {none|1,4,5,6|8,12,15,18|20,24,25,28|30,35-39|41,42|44}{maxHeight:'300px'}
 FROM bellsoft/alpaquita-linux-base:glibc AS downloader
@@ -874,60 +714,28 @@ ENTRYPOINT ["/java/bin/java", "-XX:CacheDataStore=./application.cds", "-jar", "/
 
 ---
 layout: image
-image: /bg-0.png
+image: /charts/leyden-startup.svg
 ---
 
-<img src="/charts/leyden-startup.svg" class="center"/>
-
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
-
----
-layout: image
-image: /bg-0.png
----
-
-<img src="/charts/leyden-mem-usage.svg" class="center"/>
-
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
 
 
 ---
 layout: image
-image: /bg-0.png
+image: /charts/leyden-mem-usage.svg
 ---
 
-<img src="/charts/leyden-image-size.svg" class="center"/>
-
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
 
 
 ---
 layout: image
-image: /Bg-4.png
+image: /charts/leyden-image-size.svg
+---
+
+
+
+---
+layout: image
+image: /Bg-8.png
 ---
 
 > # I found something exciting... Can't wait to explore!
@@ -949,7 +757,7 @@ div {
 
 ---
 layout: image
-image: /Bg-13.png
+image: /Bg-12.png
 ---
 
 # Problem
@@ -964,25 +772,11 @@ image: /Bg-13.png
 <v-click>Compile and optimize<br/>
 at build time?</v-click>
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
+
 
 ---
 layout: image
-image: /Bg-13.png
+image: /Bg-12.png
 ---
 
 # Solution: GraalVM Native Image
@@ -994,21 +788,7 @@ image: /Bg-13.png
 - No OpenJDK required to run
 - The app starts at peak performance
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
+
 
 ---
 layout: image
@@ -1017,7 +797,7 @@ image: /aot.png
 
 ---
 layout: image
-image: /Bg-13.png
+image: /Bg-12.png
 ---
 
 # Native Image: Any Considerations?
@@ -1027,29 +807,12 @@ image: /Bg-13.png
 - Several minutes to build the image
 - Special treatment of Java's dynamism
 
-<br>
+<br/>
 <v-click>Let the journey begin!</v-click>
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 # First, let's try it locally
 
@@ -1075,25 +838,15 @@ Build a fat JAR:
 </plugin>
 ```
 
-<br>
+<br/>
 
 ```bash
 mvn clean package
 ```
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 Collect the metadata with the Tracing Agent:
 
@@ -1114,11 +867,12 @@ The image was built, let's run it!
 
 ---
 layout: image
-image: /Bg_21.png
+image: /Bg-8.png
 ---
 
 # Oops!
-<br><br><br>
+<br/>
+
 ```bash
 Exception in thread "main" java.lang.IllegalStateException: java.util.zip.ZipException: zip END header not found
         at org.springframework.boot.loader.ExecutableArchiveLauncher.<init>(ExecutableArchiveLauncher.java:57)
@@ -1138,22 +892,20 @@ h1 {
 
 ---
 layout: image
-image: /bg-0.png
+image: /Bg-8.png
 ---
 
 
-Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br>
+Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br/>
 
 <img src="/zip-ex.png"/>
 
-➡️ Use ```mvn -Pnative native:compile``` to build the image.<br><br>
+➡️ Use ```mvn -Pnative native:compile``` to build the image.<br/>
 
 <v-click><b>🤷‍♀️ Alright, let's try with a plugin.</b></v-click>
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 Add ```native``` profile:
 ```xml {all|6,7,8|21|22-24|27-29}{maxHeight:'200px'}
@@ -1205,11 +957,12 @@ mvn -Pnative native:compile
 
 ---
 layout: image
-image: /Bg_21.png
+image: /Bg-8.png
 ---
 
 # Oops!
-<br><br><br>
+<br/>
+
 ```bash{all|1,6}
 Error: Classes that should be initialized at run time got initialized during image building:
  com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. To see why com.ctc.wstx.api.CommonConfig got initialized use --trace-class-initialization=com.ctc.wstx.api.CommonConfig
@@ -1218,11 +971,8 @@ com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time. To 
 com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time. To see why com.ctc.wstx.util.DefaultXmlSymbolTable got initialized use --trace-class-initialization=com.ctc.wstx.util.DefaultXmlSymbolTable
 To see how the classes got initialized, use --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
 ```
-<br>
 
-<v-click>
-<img src="/mkay.png" width="100px" class="absolute right-60px bottom-50px"/>
-</v-click>
+
 
 <style>
 h1 {
@@ -1234,9 +984,7 @@ h1 {
 </style>
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 Add the `--trace-class-initialization` argument:
 ```xml {none|23}{maxHeight:'200px'}
@@ -1278,19 +1026,8 @@ mvn -Pnative native:compile
 ```
 
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
+---
 
----
-layout: image
-image: /bg-0.png
----
 
 More detailed output:
 ```bash{all|2}{maxHeight:'200px'}
@@ -1321,15 +1058,13 @@ Error: Classes that should be initialized at run time got initialized during ima
 
 ```
 
-<br>
+<br/>
 
 <v-click>We found the culprit!</v-click>
 
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 Alright, let's add the option to initialize ```org.springframework.http.codec.xml.XmlEventDecoder``` at runtime:
 ```xml {none|23}{maxHeight:'200px'}
@@ -1372,11 +1107,12 @@ mvn -Pnative native:compile
 
 ---
 layout: image
-image: /Bg_21.png
+image: /Bg-8.png
 ---
 
 # Oops!
-<br><br><br>
+<br/>
+
 ```bash{all}
 Error: Classes that should be initialized at run time got initialized during image building:
  com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. To see why com.ctc.wstx.api.CommonConfig got initialized use --trace-class-initialization=com.ctc.wstx.api.CommonConfig
@@ -1385,13 +1121,10 @@ com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time. To 
 com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time. To see why com.ctc.wstx.util.DefaultXmlSymbolTable got initialized use --trace-class-initialization=com.ctc.wstx.util.DefaultXmlSymbolTable
 To see how the classes got initialized, use --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
 ```
-<br>
+<br/>
 
 The same error!
 
-<v-click>
-<img src="/facepalm.png" width="100px" class="absolute right-60px bottom-50px"/>
-</v-click>
 
 <style>
 h1 {
@@ -1407,22 +1140,20 @@ div {
 
 ---
 layout: image
-image: /bg-0.png
+image: /Bg-8.png
 ---
 
 Apparently, [another known issue](https:/github.com/spring-projects/spring-framework/issues/31806#issuecomment-1862502951)<br>
 
 <img src="/xml-ex.png"/>
 
-➡️ Need to add the ```--strict-image-heap``` option.<br><br>
+➡️ Need to add the ```--strict-image-heap``` option.<br/>
 
 <v-click><b>🫡 Will do!</b></v-click>
 
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 Let's add the ```--strict-image-heap``` option:
 ```xml {none|23}{maxHeight:'200px'}
@@ -1464,14 +1195,6 @@ mvn -Pnative native:compile
 ```
 
 
-<style>
-h1 {
-    font-size: 44px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
 
 ---
 class: text-center
@@ -1486,7 +1209,7 @@ background: /Bg-1.png
 
 ---
 layout: image
-image: /Bg_21.png
+image: /Bg-8.png
 ---
 
 # Oops!
@@ -1508,7 +1231,7 @@ java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class
         at io.lettuce.core.event.jfr.JfrEventRecorder.record(JfrEventRecorder.java:33) ~[na:na]
 ```
 
-## <v-click>Apparently, a JFR event is created when the user sends<br> a request to the AI Bot</v-click>
+## <v-click>Apparently, a JFR event is created when the user sends<br/> a request to the AI Bot</v-click>
 
 <style>
 h1 {
@@ -1524,9 +1247,7 @@ h2 {
 
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 Let's enable JFR:
 ```xml {none|23}{maxHeight:'200px'}
@@ -1607,9 +1328,7 @@ h2 {
 </style>
 
 ---
-layout: image
-image: /bg-0.png
----
+
 
 ```docker {all|1,8|10,14,17|16} {maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
@@ -1634,11 +1353,11 @@ COPY --from=builder /app/${project}/target/native/${project} /app/app
 
 ---
 layout: image
-image: /Bg_21.png
+image: /Bg-8.png
 ---
 
 # Oops!
-<br>
+<br/>
 
 ```bash{all}
 2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
@@ -1654,11 +1373,8 @@ image: /Bg_21.png
 2190.5 [INFO] Finished at: 2025-04-15T11:28:49Z
 2190.5 [INFO] ------------------------------------------------------------------------
 ```
-<br>
 
-<v-click>
-<img src="/eye-roll.png" width="100px" class="absolute right-60px bottom-50px"/>
-</v-click>
+
 
 <style>
 h1 {
@@ -1672,7 +1388,7 @@ h1 {
 
 ---
 layout: image
-image: /bg-0.png
+image: /Bg-8.png
 ---
 
 [A bug?](https:/github.com/abertschi/graalphp/pull/39)<br/>
@@ -1685,27 +1401,27 @@ image: /bg-0.png
 
 ---
 layout: image
-image: /bg-0.png
+image: /Bg-8.png
 ---
-The process is so slow it fails.<br>
-[Wrong Colima settings](https:/github.com/abiosoft/colima/issues/204)<br>
+The process is so slow it fails.<br/>
+[Wrong Colima settings](https:/github.com/abiosoft/colima/issues/204)<br/>
 
 <img src="/colima-ex.png"/>
 
 ➡️ Switching from ```colima start --vm-type=vz``` to ```colima start --vm-type=qemu``` should do the trick.
 
-<br>
+<br/>
 
 <v-click><b>Fingers crossed or what?</b></v-click>
 
 
 ---
 layout: image
-image: /Bg_21.png
+image: /Bg-8.png
 ---
 
 # Oops!
-<br>
+<br/>
 
 ```bash{all|10,12,21}{maxHeight:'200px'}
 520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
@@ -1731,11 +1447,8 @@ image: /Bg_21.png
 520.7 Target: aarch64-alpaquita-linux-musl
 520.7 Configured with: /ws/workspace/aq-build-pkg/aports/core/gcc/src/gcc-14.2.0/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=aarch64-alpaquita-linux-musl --host=aarch64-alpaquita-linux-musl --target=aarch64-alpaquita-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-languages=c,c++,d,objc,go,fortran,ada --enable-link-serialization=2 --enable-linker-build-id --with-arch=armv8-a --with-abi=lp64 --disable-libquadmath --disable-libssp --disable-libsanitizer --disable-cet --enable-gnu-indirect-function=yes --enable-shared --enable-threads --enable-tls --with-bugurl='https:/bell-sw.com/support/' --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpaquita 14.2.0'
 ```
-<br>
 
-<v-click>
-<img src="/crazy.png" width="200px" class="absolute right-60px bottom-30px"/>
-</v-click>
+
 
 <style>
 h1 {
@@ -1749,17 +1462,17 @@ h1 {
 
 ---
 layout: image
-image: /bg-0.png
+image: /Bg-8.png
 ---
 
 ## Linking issue: musl libc lacks required tools
 
-<br>
+<br/>
 
 - Option 1: add required packages (libstc++, etc.) with ```apk add```
 - <span v-mark.highlight.red="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
 
-<br>
+<br/>
 
 ```docker {all|1,10}{maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc as builder
@@ -1796,61 +1509,29 @@ background: /Bg-1.png
 
 ---
 layout: image
-image: /bg-0.png
+image: /charts/native-image-startup.svg
 ---
 
-<img src="/charts/native-image-startup.svg" class="center"/>
 
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
 
 ---
 layout: image
-image: /bg-0.png
+image: /charts/native-image-mem-usage.svg
 ---
 
-<img src="/charts/native-image-mem-usage.svg" class="center"/>
 
 
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
 
 ---
 layout: image
-image: /bg-0.png
+image: /charts/native-image-size.svg
 ---
 
-<img src="/charts/native-image-size.svg" class="center"/>
 
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-</style>
 
 
 ---
-class: text-center
-layout: cover
-background: /bg-0.png
----
+
 
 <img src="/frodo.png" class="center"/>
 
@@ -1866,12 +1547,12 @@ background: /bg-0.png
 
 ---
 layout: image
-image: /Bg-4.png
+image: /Bg-8.png
 ---
 
 > # We need drastic changes, I won't settle for half-measures!
 
-<br>
+<br/>
 
 The Rebel
 
@@ -1888,7 +1569,7 @@ div {
 
 ---
 layout: image
-image: /Bg-11.png
+image: /Bg-12.png
 ---
 
 # Problem
@@ -1899,25 +1580,9 @@ image: /Bg-11.png
 
 
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
-
 ---
 layout: image
-image: /Bg-11.png
+image: /Bg-12.png
 ---
 
 # Solution: Coordinated Restore at Checkpoint (CRaC)
@@ -1925,49 +1590,18 @@ image: /Bg-11.png
 
 - Pause and restart a Java application
 - A snapshot of the current JVM state
-- JVM is still there:<br> dynamic performance optimization<br> is possible after restore
+- JVM is still there:<br/> dynamic performance optimization<br/> is possible after restore
 
 
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
 
 ---
 layout: image
-image: /Bg-11.png
+image: /Bg-12.png
 ---
 
 # Project CRaC: Any Considerations?
 
 - A snapshot may contain sensitive data
-- May need to augment the code<br> for reliable checkpoint and restore
+- May need to augment the code<br/> for reliable checkpoint and restore
 
 
-
-<style>
-h1 {
-    font-size: 34px;
-    text-align: left;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-ul {
-    text-align: left;
-    font-size: 24px;
-}
-div {
-    font-size: 24px;
-}
-</style>
