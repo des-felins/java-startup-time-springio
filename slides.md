@@ -89,7 +89,7 @@ h2 {
 
 ---
 layout: image-right
-image: '/logo1.png'
+image: '/qr.png'
 ---
 
 # About BellSoft
