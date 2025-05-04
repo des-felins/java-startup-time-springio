@@ -359,7 +359,7 @@ Inflated cloud bills: management is not happy
 
 Services eat away at resources
 
-Scaling is a nightmare
+The longer the start, the slower the rollout
 
 <br/>
 <b> Maybe Java is not cut out for the cloud? </b>
@@ -1250,7 +1250,7 @@ h2 {
 
 
 Let's enable JFR:
-```xml {none|23}{maxHeight:'200px'}
+```xml {none|24}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
