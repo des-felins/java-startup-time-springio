@@ -135,7 +135,7 @@ div {
 </style>
 
 ---
-class: text-center
+class: statement
 layout: cover
 background: /Bg-1.png
 ---
@@ -148,14 +148,29 @@ layout: cover
 background: /Bg-1.png
 ---
 
-## Who knows one way to reduce the startup of their Java application?
+## Who knows
+# one way
+##  to reduce the startup of their Java application?
 
-<style>
-h2 {
-    font-size: 40px;
-    line-height: 1.2;
-}
-</style>
+---
+class: text-center
+layout: cover
+background: /Bg-1.png
+---
+
+## Who knows
+# two ways
+## to reduce the startup of their Java application?
+
+---
+class: text-center
+layout: cover
+background: /Bg-1.png
+---
+
+## Who knows
+# three ways
+## to reduce the startup of their Java application?
 
 
 ---
@@ -164,54 +179,17 @@ layout: cover
 background: /Bg-1.png
 ---
 
-## Who knows two ways to reduce the startup of their Java application?
-
-<style>
-h2 {
-    font-size: 40px;
-    line-height: 1.2;
-}
-</style>
-
+## Who knows
+# four ways
+## to reduce the startup of their Java application?
 
 ---
-class: text-center
+class: statement
 layout: cover
 background: /Bg-1.png
 ---
 
-## Who knows three ways to reduce the startup of their Java application?
-
-<style>
-h2 {
-    font-size: 40px;
-    line-height: 1.2;
-}
-</style>
-
-
----
-class: text-center
-layout: cover
-background: /Bg-1.png
----
-
-## Who knows four ways to reduce the startup of their Java application?
-
-<style>
-h2 {
-    font-size: 40px;
-    line-height: 1.2;
-}
-</style>
-
----
-class: text-center
-layout: cover
-background: /Bg-1.png
----
-
-## Once upon a time, all was well in one enterprise...
+# Once upon a time, all was well in one startup...
 
 <style>
 h1 {
@@ -219,7 +197,6 @@ h1 {
     line-height: 1.2;
 }
 </style>
-
 
 ---
 layout: image
@@ -355,18 +332,16 @@ image: /Bg-8.png
 <br/>
 <v-clicks>
 
-Inflated cloud bills: management is not happy
+Inflated cloud bills: Management is not happy
 
 Services eat away at resources
 
 The longer the start, the slower the rollout
 
-<br/>
-<b> Maybe Java is not cut out for the cloud? </b>
+<b><br/> Maybe Java is not cut out for the cloud? </b>
 
 <b> Maybe it's not too late to migrate to Go? </b>
 </v-clicks>
-
 
 ---
 class: text-center
@@ -560,32 +535,34 @@ image: /Bg-12.png
 to another point in time?</v-click>
 
 ---
-layout: image
-image: /Bg-12.png
----
 
 # Solution: Project Leyden
 
-
 - Beyond AppCDS: AOT Cache
-- Shift some computations from production <br/> run to an earlier stage
-- Condensers: shifting, constraining, and<br/> optimizing transformations
+- Shift some computations from production run to an earlier stage
+- Condensers: shifting, constraining, and optimizing transformations
 - Flexibly choose which condensers to apply
 
----
-layout: image
-image: /Bg-16.png
 ---
 
 # Project Leyden: Any Considerations?
 
 
 - Still in the makings
-- JEP 483: Ahead-of-Time Class Loading & Linking<br/> (JDK 24)
-- The more constraints applied,<br/> the better startup/warmup
+- JEP 483: Ahead-of-Time Class Loading & Linking (JDK 24)
+- The more constraints applied, the better startup/warmup
 
-<br/>
+
 <v-click>Meanwhile, we can experiment!</v-click>
+
+---
+
+# Let's start with what is already implemented
+<img/>
+
+[JEP 483](https://openjdk.org/jeps/483): Ahead-of-Time Class Loading & Linking (JDK 24)
+
+> Improve startup time by making the classes of an application instantly available, in a loaded and linked state, when the HotSpot Java Virtual Machine starts. Achieve this by monitoring the application during one run and storing the loaded and linked forms of all classes in a cache for use in subsequent runs. Lay a foundation for future improvements to both startup and warmup time.
 
 ---
 
@@ -607,9 +584,8 @@ image: /Bg-16.png
 
 ---
 
-
-```docker {1,9|11,16,17|20,25-28|31,32|24}{maxHeight:'300px'}
-FROM bellsoft/liberica-runtime-container:jdk-24-stream-musl as builder
+```docker {1,9|11,16,17|20,26-29|32-35|24,25}{maxHeight:'350px'}
+FROM bellsoft/liberica-runtime-container:jdk-24-stream-musl AS builder
 
 ARG project
 ENV project=${project}
@@ -617,9 +593,9 @@ ENV project=${project}
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
+RUN cd ${project} && ./mvnw -Dmaven.test.skip=true package
 
-FROM bellsoft/liberica-runtime-container:jre-24-cds-musl as optimizer
+FROM bellsoft/liberica-runtime-container:jre-24-cds-musl AS optimizer
 ARG project
 ENV project=${project}
 
@@ -628,21 +604,32 @@ COPY --from=builder /app/${project}/target/*.jar app.jar
 RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
 
-FROM bellsoft/liberica-runtime-container:jre-24-cds-musl
+FROM bellsoft/liberica-runtime-container:jre-24-cds-musl AS runner
 
 RUN apk add curl
 WORKDIR /app
-ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:AOTCache=app.aot", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:AOTCache=app.aot",
+ "-jar", "/app/app.jar"]
 COPY --from=optimizer /app/extracted/dependencies/ ./
 COPY --from=optimizer /app/extracted/spring-boot-loader/ ./
 COPY --from=optimizer /app/extracted/snapshot-dependencies/ ./
 COPY --from=optimizer /app/extracted/application/ ./
 
 
-RUN java -Dspring.aot.enabled=true -XX:AOTMode=record -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -jar /app/app.jar
-RUN java -Dspring.aot.enabled=true -XX:AOTMode=create -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar /app/app.jar
+RUN java -Dspring.aot.enabled=true -XX:AOTMode=record \
+    -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -jar /app/app.jar
+RUN java -Dspring.aot.enabled=true -XX:AOTMode=create \
+    -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar /app/app.jar
 ```
 
+---
+
+# Not enough?
+<div/>
+
+Let's push it even further and use the builds of premain in Leyden!
+
+<sub>We will be happy to get your feedback on what's broken!</sub>
 
 ---
 
@@ -664,14 +651,11 @@ RUN java -Dspring.aot.enabled=true -XX:AOTMode=create -XX:AOTConfiguration=app.a
 
 ---
 
-
-```docker {none|1,4,5,6|8,12,15,18|20,24,25,28|30,35-39|41,42|44}{maxHeight:'300px'}
+```docker {all|1,2,4|6,10-13|16|18,22-23|26|28|33-37|39,40|42}{maxHeight:'350px'}
 FROM bellsoft/alpaquita-linux-base:glibc AS downloader
-
-RUN apk add curl tar
-RUN curl https:/download.java.net/java/early_access/leyden/2/openjdk-24-leyden+2-8_linux-x64_bin.tar.gz -o /java.tar.gz && \
-    cd / && tar -zxvf java.tar.gz && mv /jdk-24 /java && \
-    rm -f /java.tar.gz
+ADD https://is.gd/tZhyPF /java.tar.gz # just a placeholder
+RUN apk add tar
+RUN tar -zxvf java.tar.gz && mv /jdk-24 /java
 
 FROM bellsoft/alpaquita-linux-base:glibc AS builder
 ARG project
@@ -683,7 +667,7 @@ ADD ${project} /app/${project}
 ENV JAVA_HOME=/java \
     project=${project}
 
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
+RUN cd ${project} && ./mvnw -Dmaven.test.skip=true package
 
 FROM bellsoft/alpaquita-linux-base:glibc AS optimizer
 ARG project
@@ -871,7 +855,7 @@ image: /Bg-8.png
 ---
 
 # Oops!
-<br/>
+<div/>
 
 ```bash
 Exception in thread "main" java.lang.IllegalStateException: java.util.zip.ZipException: zip END header not found
@@ -895,12 +879,11 @@ layout: image
 image: /Bg-8.png
 ---
 
-
 Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br/>
 
 <img src="/zip-ex.png"/>
 
-➡️ Use ```mvn -Pnative native:compile``` to build the image.<br/>
+➡️ Use `mvn -Pnative native:compile` to build the image.<br/>
 
 <v-click><b>🤷‍♀️ Alright, let's try with a plugin.</b></v-click>
 
@@ -1111,7 +1094,7 @@ image: /Bg-8.png
 ---
 
 # Oops!
-<br/>
+<div/>
 
 ```bash{all}
 Error: Classes that should be initialized at run time got initialized during image building:
@@ -1143,7 +1126,7 @@ layout: image
 image: /Bg-8.png
 ---
 
-Apparently, [another known issue](https:/github.com/spring-projects/spring-framework/issues/31806#issuecomment-1862502951)<br>
+Apparently, [another known issue](https:/github.com/spring-projects/spring-framework/issues/31806#issuecomment-1862502951)<br/>
 
 <img src="/xml-ex.png"/>
 
@@ -1151,11 +1134,10 @@ Apparently, [another known issue](https:/github.com/spring-projects/spring-frame
 
 <v-click><b>🫡 Will do!</b></v-click>
 
-
 ---
 
+Let's add the `--strict-image-heap` option:
 
-Let's add the ```--strict-image-heap``` option:
 ```xml {none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
@@ -1194,8 +1176,6 @@ Run
 mvn -Pnative native:compile
 ```
 
-
-
 ---
 class: text-center
 layout: cover
@@ -1204,8 +1184,11 @@ background: /Bg-1.png
 
 # Success!
 
-## <v-click>...Or is it?</v-click>
+<v-click>
 
+## ...Or is it?
+
+</v-click>
 
 ---
 layout: image
@@ -1233,7 +1216,7 @@ java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class
 
 ## <v-click>Apparently, a JFR event is created when the user sends<br/> a request to the AI Bot</v-click>
 
-<style>
+<style scoped>
 h1 {
     font-size: 44px;
     text-align: center;
@@ -1247,7 +1230,6 @@ h2 {
 
 
 ---
-
 
 Let's enable JFR:
 ```xml {none|24}{maxHeight:'200px'}
@@ -1359,7 +1341,7 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
-```bash{all}
+```bash{all|3-6}
 2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
 2189.3
 2189.3 Fatal error: org.graalvm.compiler.debug.GraalError: org.graalvm.compiler.core.common.PermanentBailoutException: Compilation exceeded 300.000000 seconds during CFG traversal
@@ -1384,7 +1366,6 @@ h1 {
     color: #FFFFFF;
 }
 </style>
-
 
 ---
 layout: image
@@ -1568,40 +1549,226 @@ div {
 </style>
 
 ---
-layout: image
-image: /Bg-12.png
----
 
 # Problem
 
-- Unfamiliar workflow with C++ code<br/> of Native Image
-- Push the limits: reduce<br/> startup/warmup to milliseconds
+- Unfamiliar workflow with C++ code of Native Image
+- Push the limits: reduce startup/warmup to milliseconds
 - Want to preserve JIT-compilation
+  - to keep peak performance
 
-
-
----
-layout: image
-image: /Bg-12.png
 ---
 
 # Solution: Coordinated Restore at Checkpoint (CRaC)
 
+> The CRaC (Coordinated Restore at Checkpoint) Project researches coordination of Java programs with mechanisms to checkpoint (make an image of, snapshot) a Java instance while it is executing. Restoring from the image could be a solution to some of the problems with the start-up and warm-up times. The primary aim of the Project is to develop a new standard mechanism-agnostic API to notify Java programs about the checkpoint and restore events. Other research activities will include, but will not be limited to, integration with existing checkpoint/restore mechanisms and development of new ones, changes to JVM and JDK to make images smaller and ensure they are correct.
+
+https://openjdk.org/projects/crac/
+
+---
+
+# TL;DR
 
 - Pause and restart a Java application
 - A snapshot of the current JVM state
-- JVM is still there:<br/> dynamic performance optimization<br/> is possible after restore
-
-
+- JVM is still there: dynamic performance optimization is possible after restore
 
 ---
-layout: image
-image: /Bg-12.png
+
+# CRaC is not canonycal part of JDK
+
+<div/>
+
+Only some vendors provide it: BellSoft, Azul
+
+Azul was the first to implement, BellSoft supports a fork
+
 ---
 
 # Project CRaC: Any Considerations?
 
 - A snapshot may contain sensitive data
-- May need to augment the code<br/> for reliable checkpoint and restore
+- May need to augment the code for reliable checkpoint and restore
 
+---
 
+# Trivial example
+
+```java {all|1|2|3|4|5-7|8}
+public static void main(String args[]) throws InterruptedException {
+  // This is a part of the saved state
+  long startTime = System.currentTimeMillis();
+  for(int counter: IntStream.range(1, 10000).toArray()) {
+    Thread.sleep(1000);
+    long currentTime = System.currentTimeMillis();
+    System.out.println("Counter: " + counter + "(passed " + (currentTime-startTime) + " ms)");
+    startTime = currentTime;
+  }
+}
+```
+
+---
+
+# Docker...
+
+<v-click>...is not that simple</v-click>
+<v-click>
+
+```docker {none|1|3|5|6}
+FROM bellsoft/liberica-runtime-container:jdk-crac-slim
+
+ADD Example.java /app/Example.java
+WORKDIR /app
+RUN javac Example.java
+ENTRYPOINT java -XX:CRaCCheckpointTo=/app/checkpoint Example
+```
+
+</v-click>
+
+<v-click>This does not create the checkpoint yet!</v-click>
+
+---
+
+# And then
+
+<div/>
+
+<v-click>
+
+Build it
+```bash
+docker build -t pre_crack -f crac2/Dockerfile crac2
+```
+
+</v-click>
+<v-click>
+
+Run it
+````md magic-move
+```bash
+docker run -d pre_crack
+```
+```bash
+docker run -d pre_crack
+# will fail
+```
+```bash
+docker run --privileged -d pre_crack
+```
+```bash
+docker run --privileged -d pre_crack
+# will work, but security folks will hate us
+```
+```bash
+docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -d pre_crack
+```
+```bash
+docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -d pre_crack
+# Not so frightening if you think about it
+```
+````
+
+</v-click>
+
+<v-click>
+
+> - `CAP_SYS_PTRACE`: we need to access the whole process tree
+>
+> transfer data to or from the memory of arbitrary processes using `process_vm_readv(2)` and `process_vm_writev(2)`
+
+</v-click>
+<v-click>
+
+> - `CAP_CHECKPOINT_RESTORE`: somehow there is a special cap for this
+>
+> Update `/proc/sys/kernel/ns_last_pid`; Read the contents of the symbolic links in `/proc/pid/map_files` for other processes
+
+</v-click>
+
+---
+
+# And then
+
+Checkpoint it
+
+```bash {none|1|3|5|6}
+ID=$(docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -p8080:8080 -d pre_crack)
+
+# wait some time
+
+docker exec -it $ID jcmd 129 JDK.checkpoint
+docker commit $ID cracked
+```
+
+<v-click>
+
+Now we're ready!
+
+```bash {none|1|2|3|4}
+docker run --rm -d \
+    --entrypoint java \
+    --network host cracked:latest \
+    -XX:CRaCRestoreFrom=/app/checkpoint
+```
+
+</v-click>
+
+---
+layout: statement
+---
+
+# And it just works!
+
+<v-click><h2>Until it doesn't</h2></v-click>
+
+---
+
+# In our startup
+
+<v-clicks>
+
+- `bot-assistant` module just works
+- `chat-api` doesn't work!
+
+Only some projects are guaranteed to work.
+
+Others... Request support from the <logos-spring-icon /> team: <logos-mongodb-icon /> is not supported for now :(
+
+</v-clicks>
+
+---
+
+# What are the options?
+
+<!-- <v-clicks> -->
+
+- Fall back to another solution
+- Request support
+- Implement support
+- Implement `Resource` on the application level!
+
+<!-- </v-clicks> -->
+
+```java {none|1,2|10-13|15-18|5-8|}{maxHeight:'140px'}
+@Component
+class MongoClientProvider implements Resource {
+    private MongoClient mongoClient;
+
+    public MongoClientProvider(String uri){
+        Core.getGlobalContext().register(this);
+        mongoClient = MongoClients.create(uri);
+    }
+
+    @Override
+    void beforeCheckpoint(Context<? extends Resource> context){
+        mongoClient.stop();
+    }
+
+    @Override
+    void afterRestore(Context<? extends Resource> context){
+        mongoClient = MongoClient.create(uri);
+    }
+}
+```
+
+<v-click>But it also imposes a st of unique challenges</v-click>
