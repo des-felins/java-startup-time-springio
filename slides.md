@@ -625,7 +625,7 @@ RUN java -Dspring.aot.enabled=true -XX:AOTMode=create \
 ---
 
 # Not enough?
-<div/>
+<div></div>
 
 Let's push it even further and use the builds of premain in Leyden!
 
@@ -855,7 +855,7 @@ image: /Bg-8.png
 ---
 
 # Oops!
-<div/>
+<div></div>
 
 ```bash
 Exception in thread "main" java.lang.IllegalStateException: java.util.zip.ZipException: zip END header not found
@@ -1094,7 +1094,7 @@ image: /Bg-8.png
 ---
 
 # Oops!
-<div/>
+<div></div>
 
 ```bash{all}
 Error: Classes that should be initialized at run time got initialized during image building:
@@ -1577,7 +1577,7 @@ https://openjdk.org/projects/crac/
 
 # CRaC is not canonycal part of JDK
 
-<div/>
+<div></div>
 
 Only some vendors provide it: BellSoft, Azul
 
@@ -1631,7 +1631,7 @@ ENTRYPOINT java -XX:CRaCCheckpointTo=/app/checkpoint Example
 
 # And then
 
-<div/>
+<div></div>
 
 <v-click>
 
