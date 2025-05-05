@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "slidev build",
-    "build-gha": "slidev build --base /java-startup-time-jcon/",
+    "build-gha": "slidev build --base /java-startup-time-springio/",
     "dev": "slidev --open",
     "export": "slidev export",
     "export-pdf": "slidev export --with-clicks --format pdf --output dist/index.pdf"
