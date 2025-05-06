@@ -263,7 +263,7 @@ layout: image
 image: /Bg-8.png
 ---
 
-# Starting point: Startup, Mem usage, image size
+# Starting point: Startup
 
 <br/>
 
@@ -275,41 +275,9 @@ Started ChatApiApplication in 2.83 seconds (process running for 3.469)
 
 Total startup time of both services: 6.5 s
 
----
-layout: image
-image: /Bg-8.png
----
+(Total size of both Docker images: 411 MB)
 
-# Starting point: Startup, Mem usage, image size
 
-<br/>
-
-```bash {1|3|4}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
-```
-
-Total memory consumption of both services: ~522 MiB
-
----
-layout: image
-image: /Bg-8.png
----
-
-# Starting point: Startup, Mem usage, image size
-
-<br/>
-
-```bash {1|3|4}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
-hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
-hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
-```
-
-Total size of Docker images: 411 MB 
 
 ---
 layout: image
@@ -341,8 +309,6 @@ image: /Bg-8.png
 
 Inflated cloud bills: Management is not happy
 
-Services eat away at resources
-
 The longer the start, the slower the rollout
 
 <b><br/> Maybe Java is not cut out for the cloud? </b>
@@ -351,7 +317,7 @@ The longer the start, the slower the rollout
 </v-clicks>
 
 
-<img src="/hamlet.png" width="200px" class="absolute right-0px bottom-0px"/>
+<img src="/hamlet.png" width="300px" class="absolute right-0px bottom-0px"/>
 
 ---
 class: text-center
@@ -419,25 +385,7 @@ layout: image
 image: /Bg-12.png
 ---
 
-# Problem
-
-
-- Application uses thousands of classes
-- Classes are loaded every time the app starts
-- Can take several seconds
-- The process repeats upon each start!
-
-<br/>
-<v-click><b>DRY!</b></v-click>
-
-
-
----
-layout: image
-image: /Bg-12.png
----
-
-# Solution: AppCDS
+# AppCDS
 
 
 - Archive of JVM and application classes
@@ -526,18 +474,6 @@ image: /charts/cds-startup.svg
 
 ---
 layout: image
-image: /charts/cds-mem-usage.svg
----
-
-
----
-layout: image
-image: /charts/cds-image-size.svg
----
-
-
----
-layout: image
 image: /Bg-8.png
 ---
 
@@ -559,27 +495,13 @@ div {
 }
 </style>
 
----
-layout: image
-image: /Bg-12.png
----
-
-# Problem
-
-- AppCDS may not be enough for our purposes
-- We want faster startup and warmup
-
-<br/>
-
-<v-click>Shift some heavy-lifting tasks<br/>
-to another point in time?</v-click>
 
 ---
 layout: image
 image: /Bg-12.png
 ---
 
-# Solution: Project Leyden
+# Project Leyden
 
 - Beyond AppCDS: AOT Cache
 - Shift computations from production run to earlier stage
@@ -673,6 +595,13 @@ RUN java -Dspring.aot.enabled=true -XX:AOTMode=create \
     -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar /app/app.jar
 ```
 
+
+---
+layout: image
+image: /charts/aot-cache-startup.svg
+---
+
+
 ---
 
 # Not enough?
@@ -749,21 +678,7 @@ ENTRYPOINT ["/java/bin/java", "-XX:CacheDataStore=./application.cds", "-jar", "/
 
 ---
 layout: image
-image: /charts/leyden-startup.svg
----
-
-
-
----
-layout: image
-image: /charts/leyden-mem-usage.svg
----
-
-
-
----
-layout: image
-image: /charts/leyden-image-size.svg
+image: /charts/leyden-ea-startup.svg
 ---
 
 
@@ -790,23 +705,6 @@ div {
 }
 </style>
 
----
-layout: image
-image: /Bg-12.png
----
-
-# Problem
-
-
-- Need to start up in ~1 second at peak performance
-- Compile and optimize code<br/> at runtime -> N minutes
-- More memory for profile data<br/> and bytecode cache
-
-<br/>
-
-<v-click>Compile and optimize<br/>
-at build time?</v-click>
-
 
 
 ---
@@ -814,13 +712,13 @@ layout: image
 image: /Bg-12.png
 ---
 
-# Solution: GraalVM Native Image
+# GraalVM Native Image
 
 
 - Ahead-of-time compilation
 - Standalone executable (.exe)
 - No OpenJDK required to run
-- The app starts at peak performance
+- The app starts without warmup
 
 
 
@@ -842,40 +740,10 @@ image: /Bg-12.png
 
 ---
 
-
 # First, let's try it locally
 
-Build a fat JAR:
-
-```xml {all}{maxHeight:'200px'}
-<plugin>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-maven-plugin</artifactId>
-    <executions>
-        <execution>
-            <goals>
-                <goal>repackage</goal>
-            </goals>
-            <configuration>
-                <classifier>spring-boot</classifier>
-                <mainClass>
-                  com.github.asm0dey.botassistant.BotAssistantApplication
-                </mainClass>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-```
-
-<br/>
-
-```bash
-mvn clean package
-```
-
-
----
-
+<div></div>
+Build a fat JAR
 
 Collect the metadata with the Tracing Agent:
 
@@ -902,7 +770,7 @@ image: /Bg-8.png
 # Oops!
 <div></div>
 
-```bash
+```bash {all|2}
 Exception in thread "main" java.lang.IllegalStateException: 
 java.util.zip.ZipException: zip END header not found
         at org.springframework.boot.loader.ExecutableArchiveLauncher.<init>(ExecutableArchiveLauncher.java:57)
@@ -984,7 +852,7 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
-```bash{all|7,8}
+```bash{all|1,7,8}
 Error: Classes that should be initialized at run time got initialized during image building:
 com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time.
 com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time. 
@@ -1373,73 +1241,6 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
-```bash{all|3,4,5}
-2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
-
-2189.3 Fatal error: org.graalvm.compiler.debug.GraalError: 
-org.graalvm.compiler.core.common.PermanentBailoutException: 
-Compilation exceeded 300.000000 seconds during CFG traversal
-
-2189.3  at method: Future io.netty.resolver.AbstractAddressResolver.resolve(SocketAddress)  [Virtual call from Object AddressResolverGroupMetrics$DelegatingAddressResolver$$Lambda/0x60e14e76cf1bdb337c1b0dbb92d2d481fd9de99e0.get(), callTarget Future AddressResolver.resolve(SocketAddress)]
-========================================================================================================================
-2189.3 Finished generating 'bot' in 10m 17s.
-2190.5 [INFO] ------------------------------------------------------------------------
-2190.5 [INFO] BUILD FAILURE
-2190.5 [INFO] ------------------------------------------------------------------------
-2190.5 [INFO] Total time:  36:26 min
-2190.5 [INFO] Finished at: 2025-04-15T11:28:49Z
-```
-
-
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: center;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
----
-layout: image
-image: /Bg-8.png
----
-
-[A bug?](https:/github.com/abertschi/graalphp/pull/39)<br/>
-
-<img src="/bailout-ex.png"/>
-
-<br/>
-
-Merged five years ago...
-
-<v-click><b>🤔Perhaps, I should dig further</b></v-click>
-
----
-layout: image
-image: /Bg-8.png
----
-The process is so slow it fails.<br/>
-[Wrong Colima settings](https:/github.com/abiosoft/colima/issues/204)<br/>
-
-<img src="/colima-ex.png"/>
-
-➡️ Switching from ```colima start --vm-type=vz``` to ```colima start --vm-type=qemu``` should do the trick.
-
-<br/>
-
-<v-click><b>Fingers crossed or what?</b></v-click>
-
-
----
-layout: image
-image: /Bg-8.png
----
-
-# Oops!
-<br/>
-
 ```bash{all|10,12,13}{maxHeight:'200px'}
 520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
 520.7 ------------------------------------------------------------------------------------------------------------------------
@@ -1547,21 +1348,6 @@ image: /charts/native-image-startup.svg
 
 
 
----
-layout: image
-image: /charts/native-image-mem-usage.svg
----
-
-
-
-
----
-layout: image
-image: /charts/native-image-size.svg
----
-
-
-
 
 ---
 
@@ -1600,17 +1386,10 @@ div {
 }
 </style>
 
----
-
-# Problem
-
-- Push the limits: reduce startup/warmup to milliseconds
-- Want to preserve JIT-compilation
-  - to keep peak performance
 
 ---
 
-# Solution: Coordinated Restore at Checkpoint (CRaC)
+# Coordinated Restore at Checkpoint (CRaC)
 
 > The CRaC (Coordinated Restore at Checkpoint) Project researches coordination of Java programs with mechanisms to checkpoint (make an image of, snapshot) a Java instance while it is executing. Restoring from the image could be a solution to some of the problems with the start-up and warm-up times. The primary aim of the Project is to develop a new standard mechanism-agnostic API to notify Java programs about the checkpoint and restore events. Other research activities will include, but will not be limited to, integration with existing checkpoint/restore mechanisms and development of new ones, changes to JVM and JDK to make images smaller and ensure they are correct.
 
