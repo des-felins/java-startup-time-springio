@@ -190,7 +190,7 @@ background: /Bg-1.png
 ---
 
 
-# Once upon a time, all was well in this startup...
+# Once upon a time, all was well in one startup...
 
 <style>
 h1 {
@@ -277,33 +277,6 @@ Total startup time of both services: 6.5 s
 
 (Total size of both Docker images: 411 MB)
 
-
-```bash {1|3|4}
-docker stats
-CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
-d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
-49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
-```
-
-Total memory consumption of both services: ~522 MiB
-
----
-layout: image
-image: /Bg-8.png
----
-
-# Starting point: Startup, Mem usage, image size
-
-<br/>
-
-```bash {1|3|4}
-docker images
-REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
-hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
-hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
-```
-
-Total size of Docker images: 411 MB
 
 ---
 layout: image
@@ -1261,73 +1234,6 @@ WORKDIR /app
 ENTRYPOINT ["/app/app"]
 COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
-
-
----
-layout: image
-image: /Bg-8.png
----
-
-# Oops!
-<br/>
-
-```bash{all|3,4,5}
-2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
-
-2189.3 Fatal error: org.graalvm.compiler.debug.GraalError:
-org.graalvm.compiler.core.common.PermanentBailoutException:
-Compilation exceeded 300.000000 seconds during CFG traversal
-
-2189.3  at method: Future io.netty.resolver.AbstractAddressResolver.resolve(SocketAddress)  [Virtual call from Object AddressResolverGroupMetrics$DelegatingAddressResolver$$Lambda/0x60e14e76cf1bdb337c1b0dbb92d2d481fd9de99e0.get(), callTarget Future AddressResolver.resolve(SocketAddress)]
-========================================================================================================================
-2189.3 Finished generating 'bot' in 10m 17s.
-2190.5 [INFO] ------------------------------------------------------------------------
-2190.5 [INFO] BUILD FAILURE
-2190.5 [INFO] ------------------------------------------------------------------------
-2190.5 [INFO] Total time:  36:26 min
-2190.5 [INFO] Finished at: 2025-04-15T11:28:49Z
-```
-
-
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: center;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
-
----
-layout: image
-image: /Bg-8.png
----
-
-[A bug?](https:/github.com/abertschi/graalphp/pull/39)<br/>
-
-<img src="/bailout-ex.png"/>
-
-<br/>
-
-Merged five years ago...
-
-<v-click><b>🤔Perhaps, I should dig further</b></v-click>
-
----
-layout: image
-image: /Bg-8.png
----
-The process is so slow it fails.<br/>
-[Wrong Colima settings](https:/github.com/abiosoft/colima/issues/204)<br/>
-
-<img src="/colima-ex.png"/>
-
-➡️ Switching from ```colima start --vm-type=vz``` to ```colima start --vm-type=qemu``` should do the trick.
-
-<br/>
-
-<v-click><b>Fingers crossed or what?</b></v-click>
 
 
 ---
