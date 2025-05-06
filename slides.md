@@ -189,7 +189,8 @@ layout: cover
 background: /Bg-1.png
 ---
 
-# Once upon a time, all was well in one startup...
+
+# Once upon a time, all was well in this startup...
 
 <style>
 h1 {
@@ -236,7 +237,7 @@ image: /Bg-8.png
 
 <br/>
 
-```docker {none|1|8|10|17|14|all}{maxHeight:'300px'}
+```docker {none|1|8|10|17|16}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
 ARG project
 ENV project=${project}
@@ -266,11 +267,13 @@ image: /Bg-8.png
 
 <br/>
 
-```bash {1|2|3|all}
+```bash {1|2|3}
 docker compose logs chat-api bot-assistant | grep Started
 Started BotAssistantApplication in 2.108 seconds (process running for 3.181)
 Started ChatApiApplication in 2.83 seconds (process running for 3.469)
 ```
+
+Total startup time of both services: 6.5 s
 
 ---
 layout: image
@@ -281,13 +284,15 @@ image: /Bg-8.png
 
 <br/>
 
-```bash {1|3|4|all}
+```bash {1|3|4}
 docker stats
 CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
 d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
 49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
 ```
 
+Total memory consumption of both services: ~522 MiB
+
 ---
 layout: image
 image: /Bg-8.png
@@ -297,12 +302,14 @@ image: /Bg-8.png
 
 <br/>
 
-```bash {1|3|4|all}
+```bash {1|3|4}
 docker images
 REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
 hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
 hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
 ```
+
+Total size of Docker images: 411 MB 
 
 ---
 layout: image
@@ -343,13 +350,47 @@ The longer the start, the slower the rollout
 <b> Maybe it's not too late to migrate to Go? </b>
 </v-clicks>
 
+
+<img src="/hamlet.png" width="200px" class="absolute right-0px bottom-0px"/>
+
 ---
 class: text-center
 layout: cover
 background: /Bg-1.png
 ---
 
-# Four heroes, one story
+Luckily, four brave developers who worked at this startup:
+
+The Defender
+
+The Sage
+
+The Explorer
+
+The Rebel
+
+
+---
+class: text-center
+layout: cover
+background: /Bg-1.png
+---
+
+They were very different, but had something in common:
+
+They cared about their software product and couldn't sit idle in the troubled time.
+
+
+---
+class: text-center
+layout: cover
+background: /Bg-1.png
+---
+
+# And that's where
+# YOU
+# take the stage!
+
 
 ---
 layout: image
@@ -527,7 +568,6 @@ image: /Bg-12.png
 
 - AppCDS may not be enough for our purposes
 - We want faster startup and warmup
-- Not all can migrate to Native Image
 
 <br/>
 
@@ -535,14 +575,24 @@ image: /Bg-12.png
 to another point in time?</v-click>
 
 ---
+layout: image
+image: /Bg-12.png
+---
 
 # Solution: Project Leyden
 
 - Beyond AppCDS: AOT Cache
-- Shift some computations from production run to an earlier stage
-- Condensers: shifting, constraining, and optimizing transformations
+- Shift computations from production run to earlier stage
+- Condensers:
+  - shifting,
+  - constraining, and 
+  - optimizing transformations
 - Flexibly choose which condensers to apply
 
+
+---
+layout: image
+image: /Bg-12.png
 ---
 
 # Project Leyden: Any Considerations?
@@ -552,6 +602,7 @@ to another point in time?</v-click>
 - JEP 483: Ahead-of-Time Class Loading & Linking (JDK 24)
 - The more constraints applied, the better startup/warmup
 
+<br/>
 
 <v-click>Meanwhile, we can experiment!</v-click>
 
@@ -651,7 +702,7 @@ Let's push it even further and use the builds of premain in Leyden!
 
 ---
 
-```docker {all|1,2,4|6,10-13|16|18,22-23|26|28|33-37|39,40|42}{maxHeight:'350px'}
+```docker {1,2,4|6,10-13,16|18,22-23,26|28,33-37|39,40|42}{maxHeight:'350px'}
 FROM bellsoft/alpaquita-linux-base:glibc AS downloader
 ADD https://is.gd/tZhyPF /java.tar.gz # just a placeholder
 RUN apk add tar
@@ -767,17 +818,11 @@ image: /Bg-12.png
 
 
 - Ahead-of-time compilation
-- Closed world assumption
 - Standalone executable (.exe)
 - No OpenJDK required to run
 - The app starts at peak performance
 
 
-
----
-layout: image
-image: /aot.png
----
 
 ---
 layout: image
@@ -789,7 +834,7 @@ image: /Bg-12.png
 
 - Resource-demanding build process
 - Several minutes to build the image
-- Special treatment of Java's dynamism
+- Closed world assumption
 
 <br/>
 <v-click>Let the journey begin!</v-click>
@@ -814,7 +859,7 @@ Build a fat JAR:
             <configuration>
                 <classifier>spring-boot</classifier>
                 <mainClass>
-                    com.github.asm0dey.chatapi.ChatApiApplication
+                  com.github.asm0dey.botassistant.BotAssistantApplication
                 </mainClass>
             </configuration>
         </execution>
@@ -858,7 +903,8 @@ image: /Bg-8.png
 <div></div>
 
 ```bash
-Exception in thread "main" java.lang.IllegalStateException: java.util.zip.ZipException: zip END header not found
+Exception in thread "main" java.lang.IllegalStateException: 
+java.util.zip.ZipException: zip END header not found
         at org.springframework.boot.loader.ExecutableArchiveLauncher.<init>(ExecutableArchiveLauncher.java:57)
         at org.springframework.boot.loader.JarLauncher.<init>(JarLauncher.java:42)
         at org.springframework.boot.loader.JarLauncher.main(JarLauncher.java:65)
@@ -891,7 +937,7 @@ Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br/>
 
 
 Add ```native``` profile:
-```xml {all|6,7,8|21|22-24|27-29}{maxHeight:'200px'}
+```xml {all|6,7,8|21|22-24}{maxHeight:'200px'}
 <profiles>
     <profile>
         <id>native</id>
@@ -918,14 +964,6 @@ Add ```native``` profile:
                         </buildArgs>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <configuration>
-                        <classifier>exec</classifier>
-                            <mainClass>com.github.asm0dey.botassistant.BotAssistantApplication</mainClass>
-                    </configuration>
-                </plugin>
             </plugins>
         </build>
     </profile>
@@ -946,13 +984,15 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
-```bash{all|1,6}
+```bash{all|7,8}
 Error: Classes that should be initialized at run time got initialized during image building:
- com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. To see why com.ctc.wstx.api.CommonConfig got initialized use --trace-class-initialization=com.ctc.wstx.api.CommonConfig
-com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time. To see why com.ctc.wstx.stax.WstxInputFactory got initialized use --trace-class-initialization=com.ctc.wstx.stax.WstxInputFactory
-com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time. To see why com.ctc.wstx.api.ReaderConfig got initialized use --trace-class-initialization=com.ctc.wstx.api.ReaderConfig
-com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time. To see why com.ctc.wstx.util.DefaultXmlSymbolTable got initialized use --trace-class-initialization=com.ctc.wstx.util.DefaultXmlSymbolTable
-To see how the classes got initialized, use --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
+com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time.
+com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time. 
+com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time.
+com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time.
+
+To see how the classes got initialized, use
+ --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
 ```
 
 
@@ -1013,9 +1053,12 @@ mvn -Pnative native:compile
 
 
 More detailed output:
-```bash{all|2}{maxHeight:'200px'}
+```bash{all|4}{maxHeight:'200px'}
 Error: Classes that should be initialized at run time got initialized during image building:
- com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. org.springframework.http.codec.xml.XmlEventDecoder caused initialization of this class with the following trace:
+
+ com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. 
+ org.springframework.http.codec.xml.XmlEventDecoder caused initialization of this class 
+ with the following trace:
         at com.ctc.wstx.api.CommonConfig.<clinit>(CommonConfig.java:59)
         at com.ctc.wstx.stax.WstxInputFactory.<init>(WstxInputFactory.java:149)
         at java.lang.invoke.DirectMethodHandle$Holder.newInvokeSpecial(DirectMethodHandle$Holder)
@@ -1026,24 +1069,12 @@ Error: Classes that should be initialized at run time got initialized during ima
         at java.lang.reflect.Constructor.newInstance(Constructor.java:486)
         at java.util.ServiceLoader$ProviderImpl.newInstance(ServiceLoader.java:789)
         at java.util.ServiceLoader$ProviderImpl.get(ServiceLoader.java:729)
-        at java.util.ServiceLoader$3.next(ServiceLoader.java:1403)
-        at javax.xml.stream.FactoryFinder$1.run(FactoryFinder.java:305)
-        at java.security.AccessController.executePrivileged(AccessController.java:778)
-        at java.security.AccessController.doPrivileged(AccessController.java:319)
-        at javax.xml.stream.FactoryFinder.findServiceProvider(FactoryFinder.java:293)
-        at javax.xml.stream.FactoryFinder.find(FactoryFinder.java:264)
-        at javax.xml.stream.FactoryFinder.find(FactoryFinder.java:210)
-        at javax.xml.stream.XMLInputFactory.newInstance(XMLInputFactory.java:166)
-        at org.springframework.util.xml.StaxUtils$$Lambda/0x00000080027d8000.get(Unknown Source)
-        at org.springframework.util.xml.StaxUtils.createDefensiveInputFactory(StaxUtils.java:77)
-        at org.springframework.util.xml.StaxUtils.createDefensiveInputFactory(StaxUtils.java:67)
-        at org.springframework.http.codec.xml.XmlEventDecoder.<clinit>(XmlEventDecoder.java:87)
 
 ```
 
 <br/>
 
-<v-click>We found the culprit!</v-click>
+<v-click at="1"">We found the culprit!</v-click>
 
 
 ---
@@ -1132,7 +1163,12 @@ Apparently, [another known issue](https:/github.com/spring-projects/spring-frame
 
 ➡️ Need to add the ```--strict-image-heap``` option.<br/>
 
-<v-click><b>🫡 Will do!</b></v-click>
+> This mode requires only the classes that are stored in the image heap to be marked with 
+> --initialize-at-build-time. This effectively reduces the number of configuration entries 
+> necessary to achieve build-time initialization.
+> 
+> Note that --strict-image-heap is enabled by default in Native Image starting from GraalVM for JDK 22.
+
 
 ---
 
@@ -1197,24 +1233,21 @@ image: /Bg-8.png
 
 # Oops!
 
-```bash {all|3} {maxHeight:'200px'}
+```bash {all|3-6} {maxHeight:'200px'}
 2025-04-11T12:25:33.511+03:00 ERROR 64619 --- [bot-assistant] [nio-8081-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z [symbol: Java_jdk_jfr_internal_JVM_isExcluded or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]] with root cause
 
-java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z [symbol: Java_jdk_jfr_internal_JVM_isExcluded or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]
+java.lang.UnsatisfiedLinkError: 
+jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z 
+[symbol: Java_jdk_jfr_internal_JVM_isExcluded 
+or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]
+
         at org.graalvm.nativeimage.builder/com.oracle.svm.core.jni.access.JNINativeLinkage.getOrFindEntryPoint(JNINativeLinkage.java:152) ~[na:na]
         at org.graalvm.nativeimage.builder/com.oracle.svm.core.jni.JNIGeneratedMethodSupport.nativeCallAddress(JNIGeneratedMethodSupport.java:54) ~[na:na]
         at jdk.jfr@21.0.6/jdk.jfr.internal.JVM.isExcluded(Native Method) ~[na:na]
                 at jdk.jfr@21.0.6/jdk.jfr.internal.MetadataRepository.register(MetadataRepository.java:137) ~[na:na]
-        at jdk.jfr@21.0.6/jdk.jfr.internal.MetadataRepository.register(MetadataRepository.java:132) ~[na:na]
-        at jdk.jfr@21.0.6/jdk.jfr.FlightRecorder.register(FlightRecorder.java:128) ~[na:na]
-        at io.lettuce.core.event.connection.JfrConnectionCreatedEvent.<clinit>(JfrConnectionCreatedEvent.java) ~[bot:6.4.2.RELEASE/f4dfb40]
-        at java.base@21.0.6/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502) ~[bot:na]
-        at java.base@21.0.6/java.lang.reflect.Constructor.newInstance(Constructor.java:486) ~[bot:na]
-        at io.lettuce.core.event.jfr.JfrEventRecorder.createEvent(JfrEventRecorder.java:93) ~[na:na]
-        at io.lettuce.core.event.jfr.JfrEventRecorder.record(JfrEventRecorder.java:33) ~[na:na]
 ```
 
-## <v-click>Apparently, a JFR event is created when the user sends<br/> a request to the AI Bot</v-click>
+## <v-click at="1">Apparently, a JFR event is created when the user sends<br/> a request to the AI Bot</v-click>
 
 <style scoped>
 h1 {
@@ -1290,11 +1323,10 @@ background: /Bg-1.png
 
 ## Let's move on to building a native image in a Docker container.
 
-### <v-click>Piece of cake, right? We solved all issues..</v-click>
+### Piece of cake, right? We solved all issues..
 
-<v-click>
-<img src="/star-wars.png" width="300px" class="center"/>
-</v-click>
+
+<img src="/starwars.png" width="300px" class="center"/>
 
 
 <style>
@@ -1312,7 +1344,7 @@ h2 {
 ---
 
 
-```docker {all|1,8|10,14,17|16} {maxHeight:'200px'}
+```docker {all|1,8|10,16,17} {maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
 ARG project
 ENV project=${project}
@@ -1341,10 +1373,13 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
-```bash{all|3-6}
+```bash{all|3,4,5}
 2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
-2189.3
-2189.3 Fatal error: org.graalvm.compiler.debug.GraalError: org.graalvm.compiler.core.common.PermanentBailoutException: Compilation exceeded 300.000000 seconds during CFG traversal
+
+2189.3 Fatal error: org.graalvm.compiler.debug.GraalError: 
+org.graalvm.compiler.core.common.PermanentBailoutException: 
+Compilation exceeded 300.000000 seconds during CFG traversal
+
 2189.3  at method: Future io.netty.resolver.AbstractAddressResolver.resolve(SocketAddress)  [Virtual call from Object AddressResolverGroupMetrics$DelegatingAddressResolver$$Lambda/0x60e14e76cf1bdb337c1b0dbb92d2d481fd9de99e0.get(), callTarget Future AddressResolver.resolve(SocketAddress)]
 ========================================================================================================================
 2189.3 Finished generating 'bot' in 10m 17s.
@@ -1353,7 +1388,6 @@ image: /Bg-8.png
 2190.5 [INFO] ------------------------------------------------------------------------
 2190.5 [INFO] Total time:  36:26 min
 2190.5 [INFO] Finished at: 2025-04-15T11:28:49Z
-2190.5 [INFO] ------------------------------------------------------------------------
 ```
 
 
@@ -1378,7 +1412,9 @@ image: /Bg-8.png
 
 <br/>
 
-<v-click><b>🤔 Doesn't look like MY problem</b></v-click>
+Merged five years ago...
+
+<v-click><b>🤔Perhaps, I should dig further</b></v-click>
 
 ---
 layout: image
@@ -1404,7 +1440,7 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
-```bash{all|10,12,21}{maxHeight:'200px'}
+```bash{all|10,12,13}{maxHeight:'200px'}
 520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
 520.7 ------------------------------------------------------------------------------------------------------------------------
 520.7                       53.2s (13.5% of total time) in 2385 GCs | Peak RSS: 6.77GB | CPU load: 3.36
@@ -1416,7 +1452,8 @@ image: /Bg-8.png
 520.7
 520.7 The build process encountered an unexpected error:
 520.7
-520.7 > java.lang.RuntimeException: There was an error linking the native image: Linker command exited with 1
+520.7 > java.lang.RuntimeException: There was an error linking the native image: 
+Linker command exited with 1
 520.7
 520.7 Linker command executed:
 520.7 /usr/bin/gcc -z noexecstack -Wl,--gc-sections -Wl,--version-script,/tmp/SVM-10923554795000531792/exported_symbols.list -no-pie -Wl,-x -o /app/bot-assistant/target/native/bot bot.o /usr/lib/jvm/liberica-nik-23-21/lib/svm/clibraries/linux-aarch64/liblibchelper.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libnet.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libextnet.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libnio.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libmanagement_ext.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libjava.a /usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl/libzip.a /usr/lib/jvm/liberica-nik-23-21/lib/svm/clibraries/linux-aarch64/libjvm.a -Wl,--export-dynamic -v -L/tmp/SVM-10923554795000531792 -L/usr/lib/jvm/liberica-nik-23-21/lib/static/linux-aarch64/musl -L/usr/lib/jvm/liberica-nik-23-21/lib/svm/clibraries/linux-aarch64 -lz -ldl -lpthread -lrt -Wl,-u,JNU_CallMethodByName -Wl,-u,JNU_CallStaticMethodByName -Wl,-u,JNU_GetEnv -Wl,-u,JNU_GetStaticFieldByName -Wl,-u,JNU_GetStringPlatformChars -Wl,-u,JNU_IsInstanceOfByName -Wl,-u,JNU_NewObjectByName -Wl,-u,JNU_NewStringPlatform -Wl,-u,JNU_ReleaseStringPlatformChars -Wl,-u,JNU_SetFieldByName -Wl,-u,JNU_ThrowArrayIndexOutOfBoundsException -Wl,-u,JNU_ThrowByName -Wl,-u,JNU_ThrowIllegalArgumentException -Wl,-u,JNU_ThrowInternalError -Wl,-u,JNU_ThrowNullPointerException -Wl,-u,JNU_ThrowOutOfMemoryError -Wl,-u,JNI_CreateJavaVM -Wl,-u,JNI_GetCreatedJavaVMs -Wl,-u,JNI_GetDefaultJavaVMInitArgs -Wl,-u,jio_fprintf -Wl,-u,jio_snprintf
@@ -1451,14 +1488,30 @@ image: /Bg-8.png
 <br/>
 
 - Option 1: add required packages (libstc++, etc.) with ```apk add```
-- <span v-mark.highlight.red="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
+- <span v-mark.highlight.green="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
 
 <br/>
 
-```docker {all|1,10}{maxHeight:'200px'}
-FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc as builder
+````md magic-move
+```docker
+FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
+
+WORKDIR /app
+ADD ${project} /app/${project}
+ADD ../pom.xml ./
+RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
+
+FROM bellsoft/alpaquita-linux-base:stream-musl
 ARG project
 ENV project=${project}
+
+RUN apk add curl
+WORKDIR /app
+ENTRYPOINT ["/app/app"]
+COPY --from=builder /app/${project}/target/native/${project} /app/app
+```
+```docker
+FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc as builder
 
 WORKDIR /app
 ADD ${project} /app/${project}
@@ -1474,9 +1527,8 @@ WORKDIR /app
 ENTRYPOINT ["/app/app"]
 COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
+````
 
-
-<v-click>I feel we are getting close...</v-click>
 
 ---
 class: text-center
@@ -1552,7 +1604,6 @@ div {
 
 # Problem
 
-- Unfamiliar workflow with C++ code of Native Image
 - Push the limits: reduce startup/warmup to milliseconds
 - Want to preserve JIT-compilation
   - to keep peak performance
@@ -1575,7 +1626,7 @@ https://openjdk.org/projects/crac/
 
 ---
 
-# CRaC is not canonycal part of JDK
+# CRaC is not a canonical part of JDK
 
 <div></div>
 
