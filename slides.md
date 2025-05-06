@@ -278,6 +278,32 @@ Total startup time of both services: 6.5 s
 (Total size of both Docker images: 411 MB)
 
 
+```bash {1|3|4}
+docker stats
+CONTAINER ID   NAME                         CPU %     MEM USAGE / LIMIT     MEM %
+d35ad859fef3   hero-guide-chat-api-1        0.21%     264.4MiB / 15.59GiB   1.66%
+49a09ecb715d   hero-guide-bot-assistant-1   0.43%     258.1MiB / 15.59GiB   1.62%
+```
+
+Total memory consumption of both services: ~522 MiB
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+# Starting point: Startup, Mem usage, image size
+
+<br/>
+
+```bash {1|3|4}
+docker images
+REPOSITORY                                 TAG       IMAGE ID       CREATED        SIZE
+hero-guide-bot-assistant                   latest    86f46df9228f   9 minutes ago  213MB
+hero-guide-chat-api                        latest    f3f6a1c2da35   2 minutes ago  198MB
+```
+
+Total size of Docker images: 411 MB
 
 ---
 layout: image
@@ -335,7 +361,6 @@ The Explorer
 
 The Rebel
 
-
 ---
 class: text-center
 layout: cover
@@ -381,10 +406,15 @@ div {
 </style>
 
 ---
-layout: image
+layout: image-right
 image: /Bg-12.png
 ---
 
+<style>
+.grid:nth-child(1) {
+background: #1C293B
+}
+</style>
 # AppCDS
 
 
@@ -507,7 +537,7 @@ image: /Bg-12.png
 - Shift computations from production run to earlier stage
 - Condensers:
   - shifting,
-  - constraining, and 
+  - constraining, and
   - optimizing transformations
 - Flexibly choose which condensers to apply
 
@@ -771,7 +801,7 @@ image: /Bg-8.png
 <div></div>
 
 ```bash {all|2}
-Exception in thread "main" java.lang.IllegalStateException: 
+Exception in thread "main" java.lang.IllegalStateException:
 java.util.zip.ZipException: zip END header not found
         at org.springframework.boot.loader.ExecutableArchiveLauncher.<init>(ExecutableArchiveLauncher.java:57)
         at org.springframework.boot.loader.JarLauncher.<init>(JarLauncher.java:42)
@@ -855,7 +885,7 @@ image: /Bg-8.png
 ```bash{all|1,7,8}
 Error: Classes that should be initialized at run time got initialized during image building:
 com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time.
-com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time. 
+com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time.
 com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time.
 com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time.
 
@@ -924,8 +954,8 @@ More detailed output:
 ```bash{all|4}{maxHeight:'200px'}
 Error: Classes that should be initialized at run time got initialized during image building:
 
- com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time. 
- org.springframework.http.codec.xml.XmlEventDecoder caused initialization of this class 
+ com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time.
+ org.springframework.http.codec.xml.XmlEventDecoder caused initialization of this class
  with the following trace:
         at com.ctc.wstx.api.CommonConfig.<clinit>(CommonConfig.java:59)
         at com.ctc.wstx.stax.WstxInputFactory.<init>(WstxInputFactory.java:149)
@@ -1031,10 +1061,10 @@ Apparently, [another known issue](https:/github.com/spring-projects/spring-frame
 
 ➡️ Need to add the ```--strict-image-heap``` option.<br/>
 
-> This mode requires only the classes that are stored in the image heap to be marked with 
-> --initialize-at-build-time. This effectively reduces the number of configuration entries 
+> This mode requires only the classes that are stored in the image heap to be marked with
+> --initialize-at-build-time. This effectively reduces the number of configuration entries
 > necessary to achieve build-time initialization.
-> 
+>
 > Note that --strict-image-heap is enabled by default in Native Image starting from GraalVM for JDK 22.
 
 
@@ -1104,9 +1134,9 @@ image: /Bg-8.png
 ```bash {all|3-6} {maxHeight:'200px'}
 2025-04-11T12:25:33.511+03:00 ERROR 64619 --- [bot-assistant] [nio-8081-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z [symbol: Java_jdk_jfr_internal_JVM_isExcluded or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]] with root cause
 
-java.lang.UnsatisfiedLinkError: 
-jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z 
-[symbol: Java_jdk_jfr_internal_JVM_isExcluded 
+java.lang.UnsatisfiedLinkError:
+jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z
+[symbol: Java_jdk_jfr_internal_JVM_isExcluded
 or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]
 
         at org.graalvm.nativeimage.builder/com.oracle.svm.core.jni.access.JNINativeLinkage.getOrFindEntryPoint(JNINativeLinkage.java:152) ~[na:na]
@@ -1241,6 +1271,73 @@ image: /Bg-8.png
 # Oops!
 <br/>
 
+```bash{all|3,4,5}
+2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
+
+2189.3 Fatal error: org.graalvm.compiler.debug.GraalError:
+org.graalvm.compiler.core.common.PermanentBailoutException:
+Compilation exceeded 300.000000 seconds during CFG traversal
+
+2189.3  at method: Future io.netty.resolver.AbstractAddressResolver.resolve(SocketAddress)  [Virtual call from Object AddressResolverGroupMetrics$DelegatingAddressResolver$$Lambda/0x60e14e76cf1bdb337c1b0dbb92d2d481fd9de99e0.get(), callTarget Future AddressResolver.resolve(SocketAddress)]
+========================================================================================================================
+2189.3 Finished generating 'bot' in 10m 17s.
+2190.5 [INFO] ------------------------------------------------------------------------
+2190.5 [INFO] BUILD FAILURE
+2190.5 [INFO] ------------------------------------------------------------------------
+2190.5 [INFO] Total time:  36:26 min
+2190.5 [INFO] Finished at: 2025-04-15T11:28:49Z
+```
+
+
+
+<style>
+h1 {
+    font-size: 44px;
+    text-align: center;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+</style>
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+[A bug?](https:/github.com/abertschi/graalphp/pull/39)<br/>
+
+<img src="/bailout-ex.png"/>
+
+<br/>
+
+Merged five years ago...
+
+<v-click><b>🤔Perhaps, I should dig further</b></v-click>
+
+---
+layout: image
+image: /Bg-8.png
+---
+The process is so slow it fails.<br/>
+[Wrong Colima settings](https:/github.com/abiosoft/colima/issues/204)<br/>
+
+<img src="/colima-ex.png"/>
+
+➡️ Switching from ```colima start --vm-type=vz``` to ```colima start --vm-type=qemu``` should do the trick.
+
+<br/>
+
+<v-click><b>Fingers crossed or what?</b></v-click>
+
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+# Oops!
+<br/>
+
 ```bash{all|10,12,13}{maxHeight:'200px'}
 520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
 520.7 ------------------------------------------------------------------------------------------------------------------------
@@ -1253,7 +1350,7 @@ image: /Bg-8.png
 520.7
 520.7 The build process encountered an unexpected error:
 520.7
-520.7 > java.lang.RuntimeException: There was an error linking the native image: 
+520.7 > java.lang.RuntimeException: There was an error linking the native image:
 Linker command exited with 1
 520.7
 520.7 Linker command executed:
@@ -1601,4 +1698,4 @@ class MongoClientProvider implements Resource {
 }
 ```
 
-<v-click>But it also imposes a st of unique challenges</v-click>
+<v-click>But it also imposes a set of unique challenges</v-click>
