@@ -99,7 +99,6 @@ image: '/qr.png'
 * <simple-icons-cncf/> <simple-icons-linuxfoundation/> Member
 * Alpaquita Linux Developer
 * ARM32 Java Port Author
-* Own base images
 
 <br/>
 Liberica is the JDK officially recommended by <logos-spring-icon />
