@@ -504,6 +504,11 @@ layout: image
 image: /Bg-12.png
 ---
 
+<style>
+.grid:nth-child(1) {
+background: #1C293B
+}
+</style>
 
 # AppCDS
 
@@ -1666,7 +1671,9 @@ Others... Request support from the <logos-spring-icon /> team: <logos-mongodb-ic
 - Implement support
 - Implement `Resource` on the application level!
 
-<!-- </v-clicks> -->
+<!--
+</v-clicks>
+-->
 
 ```java {none|1,2|10-13|15-18|5-8|}{maxHeight:'140px'}
 @Component
