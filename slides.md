@@ -9,7 +9,7 @@ drawings:
 selectable: true
 remoteAssets: true
 canvasWidth: 800
-colorSchema: 'dark'
+colorSchema: "dark"
 ---
 
 ## Four Approaches to Reducing Java Startup Time:
@@ -27,10 +27,11 @@ h2 {
 
 ---
 layout: image-right
-image: '/cat.jpg'
+image: "/cat.jpg"
 ---
 
 # Catherine Edelveis
+
 <img/>
 <v-clicks>
 🥑 Developer Advocate at BellSoft
@@ -45,13 +46,13 @@ image: '/cat.jpg'
 
 </v-clicks>
 
-
 ---
 layout: image-left
-image: '/pasha.jpeg'
+image: "/pasha.jpeg"
 ---
 
 # Pasha Finkelshteyn
+
 <img/>
 <v-clicks>
 
@@ -89,20 +90,20 @@ h2 {
 
 ---
 layout: image-right
-image: '/qr.png'
+image: "/qr.png"
 ---
 
 # About BellSoft
 
-* Liberica JDK Vendor
-* OpenJDK Contributor
-* <simple-icons-cncf/> <simple-icons-linuxfoundation/> Member
-* Alpaquita Linux Developer
-* ARM32 Java Port Author
+- Liberica JDK Vendor
+- OpenJDK Contributor
+- <simple-icons-cncf/> <simple-icons-linuxfoundation/> Member
+- Alpaquita Linux Developer
+- ARM32 Java Port Author
+- Own base images
 
 <br/>
 Liberica is the JDK officially recommended by <logos-spring-icon />
-
 
 ---
 class: text-center
@@ -113,6 +114,7 @@ background: /Bg-1.png
 # Enough about us :)
 
 ## We are here today to tell you a story about...
+
 <v-click>you!</v-click>
 
 <style>
@@ -148,8 +150,10 @@ background: /Bg-1.png
 ---
 
 ## Who knows
+
 # one way
-##  to reduce the startup of their Java application?
+
+## to reduce the startup of their Java application?
 
 ---
 class: text-center
@@ -158,7 +162,9 @@ background: /Bg-1.png
 ---
 
 ## Who knows
+
 # two ways
+
 ## to reduce the startup of their Java application?
 
 ---
@@ -168,9 +174,10 @@ background: /Bg-1.png
 ---
 
 ## Who knows
+
 # three ways
-## to reduce the startup of their Java application?
 
+## to reduce the startup of their Java application?
 
 ---
 class: text-center
@@ -179,7 +186,9 @@ background: /Bg-1.png
 ---
 
 ## Who knows
+
 # four ways
+
 ## to reduce the startup of their Java application?
 
 ---
@@ -187,7 +196,6 @@ class: statement
 layout: cover
 background: /Bg-1.png
 ---
-
 
 # Once upon a time, all was well in one startup...
 
@@ -256,7 +264,6 @@ ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 COPY --from=builder /app/${project}/target/*.jar /app/app.jar
 ```
 
-
 ---
 layout: image
 image: /Bg-8.png
@@ -276,7 +283,6 @@ Total startup time of both services: 6.5 s
 
 (Total size of both Docker images: 411 MB)
 
-
 ---
 layout: image
 image: /Bg-8.png
@@ -295,13 +301,13 @@ image: /Bg-8.png
 <br/>
 <div v-click class="text-xl"> Why are we paying so much? </div>
 
-
 ---
 layout: image
 image: /Bg-8.png
 ---
 
 # Something is rotten in our cloud infrastructure!
+
 <br/>
 <v-clicks>
 
@@ -313,7 +319,6 @@ The longer the start, the slower the rollout
 
 <b> Maybe it's not too late to migrate to Go? </b>
 </v-clicks>
-
 
 <img src="/hamlet.png" width="300px" class="absolute right-0px bottom-0px"/>
 
@@ -343,7 +348,6 @@ They were very different, but had something in common:
 
 They cared about their software product and couldn't sit idle in the troubled time.
 
-
 ---
 class: text-center
 layout: cover
@@ -351,9 +355,10 @@ background: /Bg-1.png
 ---
 
 # And that's where
-# YOU
-# take the stage!
 
+# YOU
+
+# take the stage!
 
 ---
 layout: image
@@ -387,14 +392,13 @@ image: /Bg-12.png
 background: #1C293B
 }
 </style>
-# AppCDS
 
+# AppCDS
 
 - Archive of JVM and application classes
 - Created dynamically upon app exit
 - Supported since Spring Boot 3.3
 - Even better with Spring AOT <br/> (load even more classes!)
-
 
 ---
 layout: image
@@ -403,7 +407,6 @@ image: /Bg-12.png
 
 # AppCDS: Any Considerations?
 
-
 - Use the same JVM
 - Use the same classpath
 - Bigger Docker image due to the archive
@@ -411,7 +414,6 @@ image: /Bg-12.png
 <br/>
 
 <v-click>Let's take it for a spin!</v-click>
-
 
 ---
 
@@ -431,7 +433,6 @@ image: /Bg-12.png
 ```
 
 ---
-
 
 ```docker {1,9|11,16,17|20,26-29|30,31|24,25}{maxHeight:'300px'}
 FROM bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl as builder
@@ -472,8 +473,6 @@ layout: image
 image: /charts/cds-startup.svg
 ---
 
-
-
 ---
 layout: image
 image: /Bg-8.png
@@ -497,7 +496,6 @@ div {
 }
 </style>
 
-
 ---
 layout: image
 image: /Bg-12.png
@@ -513,14 +511,12 @@ image: /Bg-12.png
   - optimizing transformations
 - Flexibly choose which condensers to apply
 
-
 ---
 layout: image
 image: /Bg-12.png
 ---
 
 # Project Leyden: Any Considerations?
-
 
 - Still in the makings
 - JEP 483: Ahead-of-Time Class Loading & Linking (JDK 24)
@@ -533,6 +529,7 @@ image: /Bg-12.png
 ---
 
 # Let's start with what is already implemented
+
 <img/>
 
 [JEP 483](https://openjdk.org/jeps/483): Ahead-of-Time Class Loading & Linking (JDK 24)
@@ -540,7 +537,6 @@ image: /Bg-12.png
 > Improve startup time by making the classes of an application instantly available, in a loaded and linked state, when the HotSpot Java Virtual Machine starts. Achieve this by monitoring the application during one run and storing the loaded and linked forms of all classes in a cache for use in subsequent runs. Lay a foundation for future improvements to both startup and warmup time.
 
 ---
-
 
 ```xml {all|7,8,9}
 <plugin>
@@ -597,16 +593,15 @@ RUN java -Dspring.aot.enabled=true -XX:AOTMode=create \
     -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar /app/app.jar
 ```
 
-
 ---
 layout: image
 image: /charts/aot-cache-startup.svg
 ---
 
-
 ---
 
 # Not enough?
+
 <div></div>
 
 Let's push it even further and use the builds of premain in Leyden!
@@ -614,7 +609,6 @@ Let's push it even further and use the builds of premain in Leyden!
 <sub>We will be happy to get your feedback on what's broken!</sub>
 
 ---
-
 
 ```xml {7,8,9}
 <plugin>
@@ -683,8 +677,6 @@ layout: image
 image: /charts/leyden-ea-startup.svg
 ---
 
-
-
 ---
 layout: image
 image: /Bg-8.png
@@ -707,8 +699,6 @@ div {
 }
 </style>
 
-
-
 ---
 layout: image
 image: /Bg-12.png
@@ -716,13 +706,10 @@ image: /Bg-12.png
 
 # GraalVM Native Image
 
-
 - Ahead-of-time compilation
 - Standalone executable (.exe)
 - No OpenJDK required to run
 - The app starts without warmup
-
-
 
 ---
 layout: image
@@ -731,14 +718,12 @@ image: /Bg-12.png
 
 # Native Image: Any Considerations?
 
-
 - Resource-demanding build process
 - Several minutes to build the image
 - Closed world assumption
 
 <br/>
 <v-click>Let the journey begin!</v-click>
-
 
 ---
 
@@ -763,13 +748,13 @@ $JAVA_HOME/bin/native-image -H:ConfigurationFileDirectories=./bot-assistant/agen
 
 The image was built, let's run it!
 
-
 ---
 layout: image
 image: /Bg-8.png
 ---
 
 # Oops!
+
 <div></div>
 
 ```bash {all|2}
@@ -805,8 +790,8 @@ Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br/>
 
 ---
 
+Add `native` profile:
 
-Add ```native``` profile:
 ```xml {all|6,7,8|21|22-24}{maxHeight:'200px'}
 <profiles>
     <profile>
@@ -852,6 +837,7 @@ image: /Bg-8.png
 ---
 
 # Oops!
+
 <br/>
 
 ```bash{all|1,7,8}
@@ -865,8 +851,6 @@ To see how the classes got initialized, use
  --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
 ```
 
-
-
 <style>
 h1 {
     font-size: 44px;
@@ -878,8 +862,8 @@ h1 {
 
 ---
 
-
 Add the `--trace-class-initialization` argument:
+
 ```xml {none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
@@ -918,11 +902,10 @@ Run
 mvn -Pnative native:compile
 ```
 
-
 ---
 
-
 More detailed output:
+
 ```bash{all|4}{maxHeight:'200px'}
 Error: Classes that should be initialized at run time got initialized during image building:
 
@@ -946,11 +929,10 @@ Error: Classes that should be initialized at run time got initialized during ima
 
 <v-click at="1"">We found the culprit!</v-click>
 
-
 ---
 
+Alright, let's add the option to initialize `org.springframework.http.codec.xml.XmlEventDecoder` at runtime:
 
-Alright, let's add the option to initialize ```org.springframework.http.codec.xml.XmlEventDecoder``` at runtime:
 ```xml {none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
@@ -995,6 +977,7 @@ image: /Bg-8.png
 ---
 
 # Oops!
+
 <div></div>
 
 ```bash{all}
@@ -1005,10 +988,10 @@ com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time. To 
 com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time. To see why com.ctc.wstx.util.DefaultXmlSymbolTable got initialized use --trace-class-initialization=com.ctc.wstx.util.DefaultXmlSymbolTable
 To see how the classes got initialized, use --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
 ```
+
 <br/>
 
 The same error!
-
 
 <style>
 h1 {
@@ -1031,14 +1014,13 @@ Apparently, [another known issue](https:/github.com/spring-projects/spring-frame
 
 <img src="/xml-ex.png"/>
 
-➡️ Need to add the ```--strict-image-heap``` option.<br/>
+➡️ Need to add the `--strict-image-heap` option.<br/>
 
 > This mode requires only the classes that are stored in the image heap to be marked with
 > --initialize-at-build-time. This effectively reduces the number of configuration entries
 > necessary to achieve build-time initialization.
 >
 > Note that --strict-image-heap is enabled by default in Native Image starting from GraalVM for JDK 22.
-
 
 ---
 
@@ -1131,10 +1113,10 @@ h2 {
 }
 </style>
 
-
 ---
 
 Let's enable JFR:
+
 ```xml {none|24}{maxHeight:'200px'}
 <profile>
     <id>native</id>
@@ -1184,7 +1166,6 @@ background: /Bg-1.png
 
 ## <v-click>Yeah, locally</v-click>
 
-
 ---
 class: text-center
 layout: cover
@@ -1195,9 +1176,7 @@ background: /Bg-1.png
 
 ### Piece of cake, right? We solved all issues..
 
-
 <img src="/starwars.png" width="300px" class="center"/>
-
 
 <style>
 h2 {
@@ -1212,7 +1191,6 @@ h2 {
 </style>
 
 ---
-
 
 ```docker {all|1,8|10,16,17} {maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
@@ -1234,13 +1212,13 @@ ENTRYPOINT ["/app/app"]
 COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
 
-
 ---
 layout: image
 image: /Bg-8.png
 ---
 
 # Oops!
+
 <br/>
 
 ```bash{all|10,12,13}{maxHeight:'200px'}
@@ -1269,8 +1247,6 @@ Linker command exited with 1
 520.7 Configured with: /ws/workspace/aq-build-pkg/aports/core/gcc/src/gcc-14.2.0/configure --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --build=aarch64-alpaquita-linux-musl --host=aarch64-alpaquita-linux-musl --target=aarch64-alpaquita-linux-musl --enable-checking=release --disable-fixed-point --disable-libstdcxx-pch --disable-multilib --disable-nls --disable-werror --disable-symvers --enable-__cxa_atexit --enable-default-pie --enable-languages=c,c++,d,objc,go,fortran,ada --enable-link-serialization=2 --enable-linker-build-id --with-arch=armv8-a --with-abi=lp64 --disable-libquadmath --disable-libssp --disable-libsanitizer --disable-cet --enable-gnu-indirect-function=yes --enable-shared --enable-threads --enable-tls --with-bugurl='https:/bell-sw.com/support/' --with-system-zlib --with-linker-hash-style=gnu --with-pkgversion='Alpaquita 14.2.0'
 ```
 
-
-
 <style>
 h1 {
     font-size: 44px;
@@ -1279,7 +1255,6 @@ h1 {
     color: #FFFFFF;
 }
 </style>
-
 
 ---
 layout: image
@@ -1290,7 +1265,7 @@ image: /Bg-8.png
 
 <br/>
 
-- Option 1: add required packages (libstc++, etc.) with ```apk add```
+- Option 1: add required packages (libstc++, etc.) with `apk add`
 - <span v-mark.highlight.green="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
 
 <br/>
@@ -1313,6 +1288,7 @@ WORKDIR /app
 ENTRYPOINT ["/app/app"]
 COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
+
 ```docker
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc as builder
 
@@ -1332,7 +1308,6 @@ COPY --from=builder /app/${project}/target/native/${project} /app/app
 ```
 ````
 
-
 ---
 class: text-center
 layout: cover
@@ -1348,14 +1323,9 @@ layout: image
 image: /charts/native-image-startup.svg
 ---
 
-
-
-
 ---
 
-
 <img src="/frodo.png" class="center"/>
-
 
 <style>
 .center {
@@ -1364,7 +1334,6 @@ image: /charts/native-image-startup.svg
   margin-right: auto;
 }
 </style>
-
 
 ---
 layout: image
@@ -1387,7 +1356,6 @@ div {
     text-align: right;
 }
 </style>
-
 
 ---
 
@@ -1468,6 +1436,7 @@ ENTRYPOINT java -XX:CRaCCheckpointTo=/app/checkpoint Example
 <v-click>
 
 Build it
+
 ```bash
 docker build -t pre_crack -f crac2/Dockerfile crac2
 ```
@@ -1476,24 +1445,30 @@ docker build -t pre_crack -f crac2/Dockerfile crac2
 <v-click>
 
 Run it
+
 ````md magic-move
 ```bash
 docker run -d pre_crack
 ```
+
 ```bash
 docker run -d pre_crack
 # will fail
 ```
+
 ```bash
 docker run --privileged -d pre_crack
 ```
+
 ```bash
 docker run --privileged -d pre_crack
 # will work, but security folks will hate us
 ```
+
 ```bash
 docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -d pre_crack
 ```
+
 ```bash
 docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -d pre_crack
 # Not so frightening if you think about it
