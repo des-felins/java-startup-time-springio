@@ -383,15 +383,10 @@ div {
 </style>
 
 ---
-layout: image-right
+layout: image
 image: /Bg-12.png
 ---
 
-<style>
-.grid:nth-child(1) {
-background: #1C293B
-}
-</style>
 
 # AppCDS
 
