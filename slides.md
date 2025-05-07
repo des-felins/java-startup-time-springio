@@ -1453,7 +1453,7 @@ docker run -d pre_crack
 
 ```bash
 docker run -d pre_crack
-# will fail
+# checkpoint will fail
 ```
 
 ```bash
@@ -1462,7 +1462,7 @@ docker run --privileged -d pre_crack
 
 ```bash
 docker run --privileged -d pre_crack
-# will work, but security folks will hate us
+# checkpoint will work, but security folks will hate us
 ```
 
 ```bash
@@ -1496,12 +1496,12 @@ docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -d pre_crac
 
 # And then
 
-Checkpoint it
+The process is something like:
 
 ```bash {none|1|3|5|6}
 ID=$(docker run --cap-add CAP_SYS_PTRACE --cap-add CAP_CHECKPOINT_RESTORE -p8080:8080 -d pre_crack)
 
-# wait some time
+# wait some time / run some tests
 
 docker exec -it $ID jcmd 129 JDK.checkpoint
 docker commit $ID cracked
@@ -1514,7 +1514,7 @@ Now we're ready!
 ```bash {none|1|2|3|4}
 docker run --rm -d \
     --entrypoint java \
-    --network host cracked:latest \
+    cracked \
     -XX:CRaCRestoreFrom=/app/checkpoint
 ```
 
@@ -1556,26 +1556,68 @@ Others... Request support from the <logos-spring-icon /> team: <logos-mongodb-ic
 
 <!-- </v-clicks> -->
 
-```java {none|1,2|10-13|15-18|5-8|}{maxHeight:'140px'}
+---
+
+# Implementing `Resource` for MongoDB. Step 1
+
+Implement our own custom MongoClient
+
+```java {1|2|4-6|8}
+public class MongoClientProxy implements MongoClient {
+  volatile MongoClient delegate;
+
+  public MongoClientProxy(MongoClient initialClient) {
+    this.delegate = initialClient;
+  }
+
+  // delegate everything to delegate
+```
+
+---
+
+# Implementing `Resource` for MongoDB. Step 2
+
+Custom client holder
+
+```java {1,2|7-9|10|14-15|19-20}{maxHeight:'250px'}
 @Component
-class MongoClientProvider implements Resource {
-    private MongoClient mongoClient;
+static public class MongoClientResource implements Resource {
 
-    public MongoClientProvider(String uri){
-        Core.getGlobalContext().register(this);
-        mongoClient = MongoClients.create(uri);
-    }
+  private final MongoClientProxy mongoClientProxy;
+  private final MongoConnectionDetails details;
 
-    @Override
-    void beforeCheckpoint(Context<? extends Resource> context){
-        mongoClient.stop();
-    }
+  public MongoClientResource(MongoClient mongoClientProxy, MongoConnectionDetails details) {
+    this.mongoClientProxy = (MongoClientProxy) mongoClientProxy;
+    this.details = details;
+    Core.getGlobalContext().register(this);
+  }
 
-    @Override
-    void afterRestore(Context<? extends Resource> context){
-        mongoClient = MongoClient.create(uri);
-    }
+  @Override
+  public void beforeCheckpoint(Context<? extends Resource> context) {
+    mongoClientProxy.delegate.close();
+  }
+
+  @Override
+  public void afterRestore(Context<? extends Resource> context) {
+    mongoClientProxy.delegate = MongoClients.create(details.getConnectionString());
+  }
 }
 ```
 
-<v-click>But it also imposes a set of unique challenges</v-click>
+---
+
+# Implementing `Resource` for MongoDB. Step 3
+
+```java {4,5|1-5|8-11}
+@Bean
+@Primary
+public MongoClient mongoClient(MongoConnectionDetails details) {
+  MongoClient initialClient = MongoClients.create(details.getConnectionString());
+  return new MongoClientProxy(initialClient);
+}
+
+@Bean
+public MongoTemplate mongoTemplate(MongoClient client) {
+  return new MongoTemplate(client, "chat");
+}
+```
