@@ -12,9 +12,7 @@ canvasWidth: 800
 colorSchema: "dark"
 ---
 
-## Four Approaches to Reducing Java Startup Time:
-
-## AppCDS, Native Image, Project Leyden, CRaC
+## Four Approaches to Reducing Java Startup Time
 
 <img src="/bellsoft.png" width="200px" class="absolute right-10px bottom-5px"/>
 
@@ -235,6 +233,125 @@ ul {
 }
 </style>
 
+
+---
+
+# Bot Assistant Service
+
+<img src="/app/b1.png" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+---
+
+# Bot Assistant Service
+
+<img src="/app/b2.png" width="500" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+---
+
+# Bot Assistant Service
+
+<img src="/app/b3.png" width="500" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+---
+
+# Chat API Service
+
+<img src="/app/c1.png" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+---
+
+# Chat API Service
+
+<img src="/app/c2.png" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+---
+
+# Chat API Service
+
+<img src="/app/c3.png" width="650" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+---
+
+# Chat API Service
+
+<img src="/app/c4.png" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+---
+
+# Chat API Service
+
+<img src="/app/c5.png" class="center"/>
+
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
 ---
 layout: image
 image: /Bg-8.png
@@ -328,7 +445,7 @@ layout: cover
 background: /Bg-1.png
 ---
 
-Luckily, four brave developers who worked at this startup:
+Luckily, four brave developers worked at this startup:
 
 The Defender
 
@@ -669,7 +786,7 @@ ENTRYPOINT ["/java/bin/java", "-XX:CacheDataStore=./application.cds", "-jar", "/
 
 ---
 layout: image
-image: /charts/leyden-ea-startup.svg
+image: /charts/leyden-aot-cache-startup.svg
 ---
 
 ---
@@ -1574,3 +1691,39 @@ class MongoClientProvider implements Resource {
 ```
 
 <v-click>But it also imposes a set of unique challenges</v-click>
+
+---
+class: text-center
+layout: cover
+background: /Bg-1.png
+---
+
+## And they all lived happily ever after!
+
+---
+class: text-center
+layout: cover
+background: /Bg-1.png
+---
+
+## This story came to an end, yours has just begun
+
+<br>
+
+<v-click><h2>Go for it!</h2></v-click>
+
+
+---
+layout: image-right
+image: "/qr.png"
+---
+
+# Thank you for your attention!
+
+
+Find us at
+
+- <logos-bluesky /> @asm0dey.site
+- <logos-bluesky /> @cat-edelveis.bsky.social
+- <logos-twitter /> asm0di0
+- <logos-twitter /> cat_edelveis
