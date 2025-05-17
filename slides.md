@@ -233,7 +233,6 @@ ul {
 }
 </style>
 
-
 ---
 
 # Bot Assistant Service
@@ -262,7 +261,6 @@ ul {
 }
 </style>
 
-
 ---
 
 # Bot Assistant Service
@@ -276,7 +274,6 @@ ul {
   margin-right: auto;
 }
 </style>
-
 
 ---
 
@@ -292,7 +289,6 @@ ul {
 }
 </style>
 
-
 ---
 
 # Chat API Service
@@ -306,7 +302,6 @@ ul {
   margin-right: auto;
 }
 </style>
-
 
 ---
 
@@ -336,7 +331,6 @@ ul {
 }
 </style>
 
-
 ---
 
 # Chat API Service
@@ -350,7 +344,6 @@ ul {
   margin-right: auto;
 }
 </style>
-
 
 ---
 layout: image
@@ -504,6 +497,11 @@ layout: image
 image: /Bg-12.png
 ---
 
+<style>
+.grid:nth-child(1) {
+background: #1C293B
+}
+</style>
 
 # AppCDS
 
@@ -1659,38 +1657,78 @@ Others... Request support from the <logos-spring-icon /> team: <logos-mongodb-ic
 
 # What are the options?
 
-<!-- <v-clicks> -->
+<v-clicks>
 
 - Fall back to another solution
 - Request support
 - Implement support
-- Implement `Resource` on the application level!
+- Implement support on our own!
 
-<!-- </v-clicks> -->
+</v-clicks>
 
-```java {none|1,2|10-13|15-18|5-8|}{maxHeight:'140px'}
+---
+
+# Implementing support on our own.
+
+Custom `MongoClient`
+
+```java {1|2-5|6-8|9}
+public class MongoClientProxy implements MongoClient {
+    volatile MongoClient delegate;
+    public MongoClientProxy(MongoClient initialClient) {
+        this.delegate = initialClient;
+    }
+    public void close() {
+        delegate.close();
+    }
+    // Delegate everything else the same way
+```
+
+---
+
+# Implementing support on our own
+
+Custom CRaC Resource
+
+```java {1,2|7-11|4,8|5,9|10|13-16|18-21|20}{maxHeight:'260px'}
 @Component
-class MongoClientProvider implements Resource {
-    private MongoClient mongoClient;
+static public class MongoClientResource implements Resource {
 
-    public MongoClientProvider(String uri){
+    private final MongoClientProxy mongoClientProxy;
+    private final MongoConnectionDetails details;
+
+    public MongoClientResource(MongoClient mongoClientProxy, MongoConnectionDetails details) {
+        this.mongoClientProxy = (MongoClientProxy) mongoClientProxy;
+        this.details = details;
         Core.getGlobalContext().register(this);
-        mongoClient = MongoClients.create(uri);
     }
 
     @Override
-    void beforeCheckpoint(Context<? extends Resource> context){
-        mongoClient.stop();
+    public void beforeCheckpoint(Context<? extends Resource> context) {
+        mongoClientProxy.delegate.close();
     }
 
     @Override
-    void afterRestore(Context<? extends Resource> context){
-        mongoClient = MongoClient.create(uri);
+    public void afterRestore(Context<? extends Resource> context) {
+        mongoClientProxy.delegate = MongoClients.create(details.getConnectionString());
     }
 }
 ```
 
-<v-click>But it also imposes a set of unique challenges</v-click>
+---
+
+# Implementing support on our own
+
+Replacing `MongoClient` in the context
+
+```java {1,3|4|2,5}
+@Bean
+@Primary
+public MongoClient mongoClient(MongoConnectionDetails details) {
+    MongoClient initialClient = MongoClients.create(details.getConnectionString());
+    return new MongoClientProxy(initialClient);
+}
+```
 
 ---
 class: text-center
@@ -1712,14 +1750,12 @@ background: /Bg-1.png
 
 <v-click><h2>Go for it!</h2></v-click>
 
-
 ---
 layout: image-right
 image: "/qr.png"
 ---
 
 # Thank you for your attention!
-
 
 Find us at
 
