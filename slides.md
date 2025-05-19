@@ -233,117 +233,6 @@ ul {
 }
 </style>
 
----
-
-# Bot Assistant Service
-
-<img src="/app/b1.png" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Bot Assistant Service
-
-<img src="/app/b2.png" width="500" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Bot Assistant Service
-
-<img src="/app/b3.png" width="500" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Chat API Service
-
-<img src="/app/c1.png" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Chat API Service
-
-<img src="/app/c2.png" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Chat API Service
-
-<img src="/app/c3.png" width="650" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Chat API Service
-
-<img src="/app/c4.png" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
-
----
-
-# Chat API Service
-
-<img src="/app/c5.png" class="center"/>
-
-<style>
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
 
 ---
 layout: image
@@ -1302,7 +1191,7 @@ h2 {
 
 ---
 
-```docker {all|1,8|10,16,17} {maxHeight:'200px'}
+```docker {none|1,8|10,16,17} {maxHeight:'200px'}
 FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
 ARG project
 ENV project=${project}
@@ -1731,12 +1620,47 @@ public MongoClient mongoClient(MongoConnectionDetails details) {
 ```
 
 ---
+layout: image
+image: /charts/crac.svg
+---
+
+
+---
 class: text-center
 layout: cover
 background: /Bg-1.png
 ---
 
 ## And they all lived happily ever after!
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+# Quick Recap
+
+Which hero are you?
+
+<br/>
+
+- The Defender ➡️ Use AppCDS for the smoothest integration
+- The Sage ➡️ Test Project Leyden EA builds to prepare to use it in the future
+- The Explorer ➡️ Befriend your app with Native Image for fast startup at peak performance
+- The Rebel ➡️ Dig into CRaC to achieve almost instant start and preserve dynamic performance optimization
+
+<style>
+h1 {
+    font-size: 34px;
+    text-align: left;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+ul {
+    text-align: left;
+    font-size: 20px;
+}
+</style>
 
 ---
 class: text-center
