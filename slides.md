@@ -1213,6 +1213,42 @@ image: /Bg-8.png
 
 <br/>
 
+```bash{all|3-5}{maxHeight:'200px'}
+2189.3 [6/8] Compiling methods...    [*************]                                                          (187.0s @ 5.54GB)
+2189.3 
+2189.3 Fatal error: org.graalvm.compiler.debug.GraalError:
+org.graalvm.compiler.core.common.PermanentBailoutException:
+Compilation exceeded 300.000000 seconds during CFG traversal
+2189.3  at method: Future 
+```
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+## The build was taking too long and never finished
+
+<br/>
+
+Solution:
+- Increase timeout time
+- Build the image on a powerful PC or in the CI
+- <span v-mark.box.green="1"> Plug a laptop into a power socket</span>
+
+<br/>
+
+<v-click at="2">Let's give it another try!</v-click>
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+# Oops!
+
+<br/>
+
 ```bash{all|10,12,13}{maxHeight:'200px'}
 520.7 [8/8] Creating image...       [*****]                                                                    (0.0s @ 3.06GB)
 520.7 ------------------------------------------------------------------------------------------------------------------------
@@ -1258,7 +1294,7 @@ image: /Bg-8.png
 <br/>
 
 - Option 1: add required packages (libstc++, etc.) with `apk add`
-- <span v-mark.highlight.green="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
+- <span v-mark.box.green="1"> Option 2: switch from musl-based Alpaquita to glibc-based </span>
 
 <br/>
 
