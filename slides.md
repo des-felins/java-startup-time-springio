@@ -211,7 +211,6 @@ image: /Bg-8.png
 
 # Our startup is doing well!
 
-<br/>
 
 - Java 21 LTS
 - Spring Boot 3.4
@@ -219,6 +218,13 @@ image: /Bg-8.png
 - MongoDB, Redis
 - JTE
 - Deploying to the cloud
+
+```java
+@GetMapping(value = "/assistant", produces = TEXT_HTML_VALUE)
+public JteModel assistant() {
+  return templates.assistantView("Bot Assistant - Chat");
+}
+```
 
 <style>
 h1 {
@@ -731,17 +737,11 @@ image: /Bg-12.png
 <div></div>
 Build a fat JAR
 
-Collect the metadata with the Tracing Agent:
-
-```bash
-$JAVA_HOME/bin/java -agentlib:native-image-agent=config-output-dir=./bot-assistant/agent-data \
--jar bot-assistant/target/bot-assistant-1.0-SNAPSHOT-spring-boot.jar
-```
 
 Build the image:
 
 ```bash
-$JAVA_HOME/bin/native-image -H:ConfigurationFileDirectories=./bot-assistant/agent-data \
+$JAVA_HOME/bin/native-image \
 -jar bot-assistant/target/bot-assistant-1.0-SNAPSHOT-spring-boot.jar
 ```
 
@@ -791,7 +791,7 @@ Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br/>
 
 Add `native` profile:
 
-```xml {all|6,7,8|21|22-24}{maxHeight:'200px'}
+```xml {all|6,7,8|21}{maxHeight:'200px'}
 <profiles>
     <profile>
         <id>native</id>
@@ -813,9 +813,6 @@ Add `native` profile:
                         <imageName>bot-assistant</imageName>
                         <outputDirectory>target/native</outputDirectory>
                         <mainClass>com.github.asm0dey.botassistant.BotAssistantApplication</mainClass>
-                        <buildArgs>
-                            <buildArg>-H:ConfigurationFileDirectories=./agent-data</buildArg>
-                        </buildArgs>
                     </configuration>
                 </plugin>
             </plugins>
@@ -863,7 +860,7 @@ h1 {
 
 Add the `--trace-class-initialization` argument:
 
-```xml {none|23}{maxHeight:'200px'}
+```xml {none|22}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -885,7 +882,6 @@ Add the `--trace-class-initialization` argument:
                     <outputDirectory>target/native</outputDirectory>
                     <mainClass>com.github.asm0dey.botassistant.BotAssistantApplication</mainClass>
                     <buildArgs>
-                        <buildArg>-H:ConfigurationFileDirectories=./agent-data</buildArg>
                         <buildArgs>--trace-class-initialization=com.ctc.wstx.util.DefaultXmlSymbolTable,com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig</buildArgs>
                     </buildArgs>
                 </configuration>
@@ -932,7 +928,7 @@ Error: Classes that should be initialized at run time got initialized during ima
 
 Alright, let's add the option to initialize `org.springframework.http.codec.xml.XmlEventDecoder` at runtime:
 
-```xml {none|23}{maxHeight:'200px'}
+```xml {none|22}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -954,7 +950,6 @@ Alright, let's add the option to initialize `org.springframework.http.codec.xml.
                     <outputDirectory>target/native</outputDirectory>
                     <mainClass>com.github.asm0dey.botassistant.BotAssistantApplication</mainClass>
                     <buildArgs>
-                        <buildArg>-H:ConfigurationFileDirectories=./agent-data</buildArg>
                         <buildArgs>--initialize-at-run-time=org.springframework.http.codec.xml.XmlEventDecoder</buildArgs>
                     </buildArgs>
                 </configuration>
@@ -1025,7 +1020,7 @@ Apparently, [another known issue](https:/github.com/spring-projects/spring-frame
 
 Let's add the `--strict-image-heap` option:
 
-```xml {none|23}{maxHeight:'200px'}
+```xml {none|22}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1047,7 +1042,6 @@ Let's add the `--strict-image-heap` option:
                     <outputDirectory>target/native</outputDirectory>
                     <mainClass>com.github.asm0dey.botassistant.BotAssistantApplication</mainClass>
                     <buildArgs>
-                        <buildArg>-H:ConfigurationFileDirectories=./agent-data</buildArg>
                         <buildArgs>--strict-image-heap</buildArgs>
                     </buildArgs>
                 </configuration>
@@ -1116,7 +1110,7 @@ h2 {
 
 Let's enable JFR:
 
-```xml {none|24}{maxHeight:'200px'}
+```xml {none|23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1138,7 +1132,6 @@ Let's enable JFR:
                     <outputDirectory>target/native</outputDirectory>
                     <mainClass>com.github.asm0dey.botassistant.BotAssistantApplication</mainClass>
                     <buildArgs>
-                        <buildArg>-H:ConfigurationFileDirectories=./agent-data</buildArg>
                         <buildArgs>--strict-image-heap</buildArgs>
                         <buildArgs>--enable-monitoring=jfr</buildArgs>
                     </buildArgs>
