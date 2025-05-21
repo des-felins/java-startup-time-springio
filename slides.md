@@ -31,7 +31,7 @@ image: "/cat.jpg"
 # Catherine Edelveis
 
 <img/>
-<v-clicks>
+
 🥑 Developer Advocate at BellSoft
 
 😍Love Java, Spring, JavaFX
@@ -42,7 +42,6 @@ image: "/cat.jpg"
 
 <span><logos-bluesky /> cat-edelveis.bsky.social</span>
 
-</v-clicks>
 
 ---
 layout: image-left
@@ -52,7 +51,6 @@ image: "/pasha.jpeg"
 # Pasha Finkelshteyn
 
 <img/>
-<v-clicks>
 
 🥑 Developer Advocate at BellSoft
 
@@ -62,7 +60,6 @@ image: "/pasha.jpeg"
 
 <span><line-md-twitter-x /> asm0di0</span>
 
-</v-clicks>
 
 ---
 class: text-center
@@ -88,20 +85,37 @@ h2 {
 
 ---
 layout: image-right
+image: "/members.png"
+---
+
+# About BellSoft
+
+Founded in 2017 by Java and Linux experts with 15+ years of experience working at Sun/Oracle.
+
+- Member of:
+  - JCP Executive Committee
+  - OpenJDK Vulnerability Group
+  - GraalVM Advisory Board
+  - Linux Foundation
+  - Cloud Native Computing Foundation
+
+
+---
+layout: image-right
 image: "/qr.png"
 ---
 
 # About BellSoft
 
-- Liberica JDK Vendor
-- OpenJDK Contributor
-- <simple-icons-cncf/> <simple-icons-linuxfoundation/> Member
-- Alpaquita Linux Developer
-- ARM32 Java Port Author
-- Own base images
+
+- Products:
+  - Liberica JDK
+  - Liberica Native Image Kit
+  - Alpaquita Linux
 
 <br/>
 Liberica is the JDK officially recommended by <logos-spring-icon />
+
 
 ---
 class: text-center
@@ -113,7 +127,7 @@ background: /Bg-1.png
 
 ## We are here today to tell you a story about...
 
-<v-click>you!</v-click>
+<v-click>YOU!</v-click>
 
 <style>
 h1 {
@@ -189,6 +203,7 @@ background: /Bg-1.png
 
 ## to reduce the startup of their Java application?
 
+
 ---
 class: statement
 layout: cover
@@ -249,15 +264,15 @@ image: /Bg-8.png
 
 <br/>
 
-```docker {none|1|8|10|17|16}{maxHeight:'300px'}
-FROM bellsoft/liberica-runtime-container:jdk-21-stream-musl as builder
+```docker {none|1,8|10,16|17}{maxHeight:'300px'}
+FROM bellsoft/liberica-runtime-container:jdk-21-musl as builder
 ARG project
 ENV project=${project}
 
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true package
+RUN cd ${project} && ./mvnw package
 
 FROM bellsoft/liberica-runtime-container:jre-21-musl
 ARG project
@@ -265,8 +280,8 @@ ENV project=${project}
 
 RUN apk add curl
 WORKDIR /app
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 COPY --from=builder /app/${project}/target/*.jar /app/app.jar
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 ```
 
 ---
@@ -278,15 +293,13 @@ image: /Bg-8.png
 
 <br/>
 
-```bash {1|2|3}
+```bash
 docker compose logs chat-api bot-assistant | grep Started
 Started BotAssistantApplication in 2.108 seconds (process running for 3.181)
 Started ChatApiApplication in 2.83 seconds (process running for 3.469)
 ```
 
 Total startup time of both services: 6.5 s
-
-(Total size of both Docker images: 411 MB)
 
 ---
 layout: image
@@ -304,19 +317,19 @@ image: /Bg-8.png
 
 <div v-click class="text-xl"> But wait... </div>
 <br/>
-<div v-click class="text-xl"> Why are we paying so much? </div>
+<div v-click class="text-xl"> Why the rollout is so slow? </div>
 
 ---
 layout: image
 image: /Bg-8.png
 ---
 
-# Something is rotten in our cloud infrastructure!
+# We are an agile team, we need a fast feedback loop!
 
 <br/>
 <v-clicks>
 
-Inflated cloud bills: Management is not happy
+Need faster rollout for faster feedback  
 
 The longer the start, the slower the rollout
 
@@ -325,7 +338,6 @@ The longer the start, the slower the rollout
 <b> Maybe it's not too late to migrate to Go? </b>
 </v-clicks>
 
-<img src="/hamlet.png" width="300px" class="absolute right-0px bottom-0px"/>
 
 ---
 class: text-center
@@ -392,25 +404,12 @@ layout: image
 image: /Bg-12.png
 ---
 
-<style>
-.grid:nth-child(1) {
-background: #1C293B
-}
-</style>
-
 # AppCDS
 
-- Archive of JVM and application classes
-- Created dynamically upon app exit
-- Supported since Spring Boot 3.3
+- Save class metadata to the disc and read it from the archive
 - Even better with Spring AOT <br/> (load even more classes!)
 
----
-layout: image
-image: /Bg-12.png
----
-
-# AppCDS: Any Considerations?
+Considerations:
 
 - Use the same JVM
 - Use the same classpath
@@ -420,9 +419,10 @@ image: /Bg-12.png
 
 <v-click>Let's take it for a spin!</v-click>
 
+
 ---
 
-```xml {all|7,8,9}
+```xml {7,8,9}
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -439,8 +439,8 @@ image: /Bg-12.png
 
 ---
 
-```docker {1,9|11,16,17|20,26-29|30,31|24,25}{maxHeight:'300px'}
-FROM bellsoft/liberica-runtime-container:jdk-21.0.7_9-stream-musl as builder
+```docker {1,9|11,16,17|20,24-27|28,29,30|31,32,33}{maxHeight:'300px'}
+FROM bellsoft/liberica-runtime-container:jdk-21.0.7_9-musl as builder
 
 ARG project
 ENV project=${project}
@@ -448,7 +448,7 @@ ENV project=${project}
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true clean package
+RUN cd ${project} && ./mvnw package
 
 FROM bellsoft/liberica-runtime-container:jre-21.0.7_9-cds-musl as optimizer
 ARG project
@@ -463,14 +463,16 @@ FROM bellsoft/liberica-runtime-container:jre-21.0.7_9-cds-musl
 
 RUN apk add curl
 WORKDIR /app
-ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:SharedArchiveFile=application.jsa", \
-"-jar", "/app/app.jar"]
 COPY --from=optimizer /app/extracted/dependencies/ ./
 COPY --from=optimizer /app/extracted/spring-boot-loader/ ./
 COPY --from=optimizer /app/extracted/snapshot-dependencies/ ./
 COPY --from=optimizer /app/extracted/application/ ./
-RUN java -Dspring.aot.enabled=true -XX:ArchiveClassesAtExit=./application.jsa \
+RUN java -Dspring.aot.enabled=true \
+-XX:ArchiveClassesAtExit=./application.jsa \
 -Dspring.context.exit=onRefresh -jar /app/app.jar
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", \
+"-XX:SharedArchiveFile=application.jsa", \
+"-jar", "/app/app.jar"]
 ```
 
 ---
@@ -508,28 +510,17 @@ image: /Bg-12.png
 
 # Project Leyden
 
-- Beyond AppCDS: AOT Cache
-- Shift computations from production run to earlier stage
-- Condensers:
-  - shifting,
-  - constraining, and
-  - optimizing transformations
-- Flexibly choose which condensers to apply
+- Beyond AppCDS: AOT Cache with pre-compiled code
+- Condensers -> optimizations
 
----
-layout: image
-image: /Bg-12.png
----
-
-# Project Leyden: Any Considerations?
-
+Considerations:
 - Still in the makings
-- JEP 483: Ahead-of-Time Class Loading & Linking (JDK 24)
-- The more constraints applied, the better startup/warmup
+- The more condensers applied, the bigger the cache
 
 <br/>
 
 <v-click>Meanwhile, we can experiment!</v-click>
+
 
 ---
 
@@ -543,7 +534,7 @@ image: /Bg-12.png
 
 ---
 
-```xml {all|7,8,9}
+```xml {all}
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -560,8 +551,8 @@ image: /Bg-12.png
 
 ---
 
-```docker {1,9|11,16,17|20,26-29|32-35|24,25}{maxHeight:'350px'}
-FROM bellsoft/liberica-runtime-container:jdk-24-stream-musl AS builder
+```docker {1,9|11,16,17|19,23-26|28-31|33,34}{maxHeight:'350px'}
+FROM bellsoft/liberica-runtime-container:jdk-24-musl AS builder
 
 ARG project
 ENV project=${project}
@@ -569,7 +560,7 @@ ENV project=${project}
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true package
+RUN cd ${project} && ./mvnw package
 
 FROM bellsoft/liberica-runtime-container:jre-24-cds-musl AS optimizer
 ARG project
@@ -579,23 +570,22 @@ WORKDIR /app
 COPY --from=builder /app/${project}/target/*.jar app.jar
 RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
-
 FROM bellsoft/liberica-runtime-container:jre-24-cds-musl AS runner
 
 RUN apk add curl
 WORKDIR /app
-ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:AOTCache=app.aot",
- "-jar", "/app/app.jar"]
 COPY --from=optimizer /app/extracted/dependencies/ ./
 COPY --from=optimizer /app/extracted/spring-boot-loader/ ./
 COPY --from=optimizer /app/extracted/snapshot-dependencies/ ./
 COPY --from=optimizer /app/extracted/application/ ./
 
-
 RUN java -Dspring.aot.enabled=true -XX:AOTMode=record \
     -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -jar /app/app.jar
 RUN java -Dspring.aot.enabled=true -XX:AOTMode=create \
     -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar /app/app.jar
+  
+ENTRYPOINT ["java", "-Dspring.aot.enabled=true", "-XX:AOTCache=app.aot",
+ "-jar", "/app/app.jar"]
 ```
 
 ---
@@ -615,7 +605,7 @@ Let's push it even further and use the builds of premain in Leyden!
 
 ---
 
-```xml {7,8,9}
+```xml {all}
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -648,7 +638,7 @@ ADD ${project} /app/${project}
 ENV JAVA_HOME=/java \
     project=${project}
 
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true package
+RUN cd ${project} && ./mvnw package
 
 FROM bellsoft/alpaquita-linux-base:glibc AS optimizer
 ARG project
@@ -714,7 +704,6 @@ image: /Bg-12.png
 - Ahead-of-time compilation
 - Standalone executable (.exe)
 - No OpenJDK required to run
-- The app starts without warmup
 
 ---
 layout: image
@@ -725,7 +714,7 @@ image: /Bg-12.png
 
 - Resource-demanding build process
 - Several minutes to build the image
-- Closed world assumption
+- Static compilation instead of dynamic one
 
 <br/>
 <v-click>Let the journey begin!</v-click>
@@ -749,10 +738,35 @@ The image was built, let's run it!
 
 ---
 layout: image
+image: /uni.jpg
+---
+
+# I never knew the journey can be so pleasant!
+
+## <v-click>Uh-oh...</v-click>
+
+<style>
+h1 {
+    color: #000000;
+}
+h2 {
+    color: #000000;
+    text-align: center;
+}
+</style>
+
+---
+layout: image
+image: /dragon.jpg
+---
+
+
+---
+layout: image
 image: /Bg-8.png
 ---
 
-# Oops!
+# A dragon!
 
 <div></div>
 
@@ -785,7 +799,49 @@ Apparently, [a known issue](https:/github.com/oracle/graal/issues/7034)<br/>
 
 ➡️ Use `mvn -Pnative native:compile` to build the image.<br/>
 
-<v-click><b>🤷‍♀️ Alright, let's try with a plugin.</b></v-click>
+Maven plugin calls `native-image java -jar` under the hood but uses lots of flags 
+that solve problems like the one above.
+
+<v-click><b>Alright, let's try with a plugin! </b></v-click>
+
+---
+
+If you use Spring Boot Parent POM, the Native Image profile is already enabled!
+
+➡️ Simply run
+
+```bash
+mvn -Pnative native:compile
+```
+
+---
+layout: image
+image: /Bg-8.png
+---
+
+# Another dragon!
+
+<br/>
+
+```bash{all|1,7,8}
+Error: Classes that should be initialized at run time got initialized during image building:
+com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time.
+com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time.
+com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time.
+com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time.
+
+To see how the classes got initialized, use
+ --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
+```
+
+<style>
+h1 {
+    font-size: 44px;
+    text-align: center;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+</style>
 
 ---
 
@@ -820,41 +876,6 @@ Add `native` profile:
     </profile>
 </profiles>
 ```
-
-Run
-
-```bash
-mvn -Pnative native:compile
-```
-
----
-layout: image
-image: /Bg-8.png
----
-
-# Oops!
-
-<br/>
-
-```bash{all|1,7,8}
-Error: Classes that should be initialized at run time got initialized during image building:
-com.ctc.wstx.api.CommonConfig was unintentionally initialized at build time.
-com.ctc.wstx.stax.WstxInputFactory was unintentionally initialized at build time.
-com.ctc.wstx.api.ReaderConfig was unintentionally initialized at build time.
-com.ctc.wstx.util.DefaultXmlSymbolTable was unintentionally initialized at build time.
-
-To see how the classes got initialized, use
- --trace-class-initialization=com.ctc.wstx.api.CommonConfig,com.ctc.wstx.stax.WstxInputFactory,com.ctc.wstx.api.ReaderConfig,com.ctc.wstx.util.DefaultXmlSymbolTable
-```
-
-<style>
-h1 {
-    font-size: 44px;
-    text-align: center;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-</style>
 
 ---
 
@@ -970,7 +991,7 @@ layout: image
 image: /Bg-8.png
 ---
 
-# Oops!
+# The same dragon!
 
 <div></div>
 
@@ -985,7 +1006,7 @@ To see how the classes got initialized, use --trace-class-initialization=com.ctc
 
 <br/>
 
-The same error!
+This is one mighty dragon...
 
 <style>
 h1 {
@@ -1071,12 +1092,19 @@ background: /Bg-1.png
 
 </v-click>
 
+
+<v-click at="2">
+
+The image was build, let's run it.
+
+</v-click>
+
 ---
 layout: image
 image: /Bg-8.png
 ---
 
-# Oops!
+# Another dragon!
 
 ```bash {all|3-6} {maxHeight:'200px'}
 2025-04-11T12:25:33.511+03:00 ERROR 64619 --- [bot-assistant] [nio-8081-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: java.lang.UnsatisfiedLinkError: jdk.jfr.internal.JVM.isExcluded(Ljava/lang/Class;)Z [symbol: Java_jdk_jfr_internal_JVM_isExcluded or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]] with root cause
@@ -1092,7 +1120,7 @@ or Java_jdk_jfr_internal_JVM_isExcluded__Ljava_lang_Class_2]
                 at jdk.jfr@21.0.6/jdk.jfr.internal.MetadataRepository.register(MetadataRepository.java:137) ~[na:na]
 ```
 
-## <v-click at="1">Apparently, a JFR event is created when the user sends<br/> a request to the AI Bot</v-click>
+## <v-click at="1">Apparently, when we create a connection to Redis, Spring creates a custom JFR event</v-click>
 
 <style scoped>
 h1 {
@@ -1108,7 +1136,9 @@ h2 {
 
 ---
 
-Let's enable JFR:
+Even the Tracing Agent doesn't detect that!
+
+So, let's enable JFR explicitly:
 
 ```xml {none|23}{maxHeight:'200px'}
 <profile>
@@ -1156,7 +1186,7 @@ background: /Bg-1.png
 
 # Finally, everything works!
 
-## <v-click>Yeah, locally</v-click>
+## <v-click>...on my machine</v-click>
 
 ---
 class: text-center
@@ -1166,33 +1196,18 @@ background: /Bg-1.png
 
 ## Let's move on to building a native image in a Docker container.
 
-### Piece of cake, right? We solved all issues..
-
-<img src="/starwars.png" width="300px" class="center"/>
-
-<style>
-h2 {
-    font-size: 34px;
-    position: relative;
-    bottom: 20px;
-}
-.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
 
 ---
 
 ```docker {none|1,8|10,16,17} {maxHeight:'200px'}
-FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl as builder
+FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-musl as builder
 ARG project
 ENV project=${project}
 
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
+RUN cd ${project} && ./mvnw -Pnative native:compile
 
 FROM bellsoft/alpaquita-linux-base:stream-musl
 ARG project
@@ -1209,7 +1224,7 @@ layout: image
 image: /Bg-8.png
 ---
 
-# Oops!
+# Another dragon!
 
 <br/>
 
@@ -1245,7 +1260,7 @@ layout: image
 image: /Bg-8.png
 ---
 
-# Oops!
+# Another dragon!
 
 <br/>
 
@@ -1305,7 +1320,7 @@ FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-musl 
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
+RUN cd ${project} && ./mvnw -Pnative native:compile
 
 FROM bellsoft/alpaquita-linux-base:stream-musl
 ARG project
@@ -1323,7 +1338,7 @@ FROM bellsoft/liberica-native-image-kit-container:jdk-21-nik-23.1.6-stream-glibc
 WORKDIR /app
 ADD ${project} /app/${project}
 ADD ../pom.xml ./
-RUN cd ${project} && ./mvnw -Dmaven.test.skip=true -Pnative native:compile
+RUN cd ${project} && ./mvnw -Pnative native:compile
 
 FROM bellsoft/alpaquita-linux-base:stream-glibc
 ARG project
@@ -1579,7 +1594,6 @@ Others... Request support from the <logos-spring-icon /> team: <logos-mongodb-ic
 
 - Fall back to another solution
 - Request support
-- Implement support
 - Implement support on our own!
 
 </v-clicks>
@@ -1701,7 +1715,7 @@ background: /Bg-1.png
 
 <br>
 
-<v-click><h2>Go for it!</h2></v-click>
+## Go for it!
 
 ---
 layout: image-right
