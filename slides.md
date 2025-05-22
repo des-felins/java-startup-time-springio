@@ -345,7 +345,7 @@ layout: cover
 background: /Bg-1.png
 ---
 
-Luckily, four brave developers worked at this startup:
+Luckily, four brave developers work at this startup:
 
 The Defender
 
@@ -361,9 +361,9 @@ layout: cover
 background: /Bg-1.png
 ---
 
-They were very different, but had something in common:
+They are very different, but have something in common:
 
-They cared about their software product and couldn't sit idle in the troubled time.
+They care about their software product and can't sit idle in the troubled time.
 
 ---
 class: text-center
@@ -400,8 +400,7 @@ div {
 </style>
 
 ---
-layout: image
-image: /Bg-12.png
+layout: two-cols
 ---
 
 # AppCDS
@@ -415,9 +414,12 @@ Considerations:
 - Use the same classpath
 - Bigger Docker image due to the archive
 
-<br/>
-
 <v-click>Let's take it for a spin!</v-click>
+
+::right:: 
+<Youtube id="_oXnnQcD_wc"/>
+
+
 
 
 ---
@@ -774,9 +776,9 @@ that solve problems like the one above.
 
 ---
 
-If you use Spring Boot Parent POM, the Native Image profile is already enabled!
+If you use Spring Boot Parent POM, the Native Image profile is already configured!
 
-➡️ Simply run
+➡️ Enable it by simply running
 
 ```bash
 mvn -Pnative native:compile
@@ -974,7 +976,7 @@ To see how the classes got initialized, use --trace-class-initialization=com.ctc
 
 <br/>
 
-This is one mighty dragon...
+This is one evasive dragon...
 
 <style>
 h1 {
@@ -1009,7 +1011,7 @@ Apparently, [another known issue](https:/github.com/spring-projects/spring-frame
 
 Let's add the `--strict-image-heap` option:
 
-```xml {none|22}{maxHeight:'200px'}
+```xml {22}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1108,7 +1110,7 @@ Even the Tracing Agent doesn't detect that!
 
 So, let's enable JFR explicitly:
 
-```xml {none|23}{maxHeight:'200px'}
+```xml {23}{maxHeight:'200px'}
 <profile>
     <id>native</id>
     <build>
@@ -1423,7 +1425,7 @@ public static void main(String args[]) throws InterruptedException {
 # Docker...
 
 <v-click>...is not that simple</v-click>
-<v-click>
+<v-click at=2>
 
 ```docker {none|1|3|5|6}
 FROM bellsoft/liberica-runtime-container:jdk-crac-slim
