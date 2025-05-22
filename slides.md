@@ -1654,10 +1654,10 @@ image: /Bg-8.png
 Which hero are you?
 
 
-🛡 ➡  AppCDS for the smoothest integration <br>
-🧙‍♂️ ➡  Project Leyden EA builds to prepare to use it in the future <br>
-🎒 ➡  Native Image for fast start <br>
-✊🏼 ➡  CRaC for almost instant start <br>
+🛡 → AppCDS for the smoothest integration <br>
+🧙‍♂️ → Project Leyden EA builds to prepare to use it in the future <br>
+🎒 → Native Image for fast start <br>
+✊🏼 → CRaC for almost instant start <br>
 
 <br>
 Testing locally? Use a power cord!
