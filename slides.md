@@ -1653,12 +1653,14 @@ image: /Bg-8.png
 
 Which hero are you?
 
-<br/>
 
-- The Defender ➡️ Use AppCDS for the smoothest integration
-- The Sage ➡️ Test Project Leyden EA builds to prepare to use it in the future
-- The Explorer ➡️ Befriend your app with Native Image for fast startup at peak performance
-- The Rebel ➡️ Dig into CRaC to achieve almost instant start and preserve dynamic performance optimization
+🛡 ➡  AppCDS for the smoothest integration <br>
+🧙‍♂️ ➡  Project Leyden EA builds to prepare to use it in the future <br>
+🎒 ➡  Native Image for fast start <br>
+✊🏼 ➡  CRaC for almost instant start <br>
+
+<br>
+Testing locally? Use a power cord!
 
 <style>
 h1 {
