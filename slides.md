@@ -532,22 +532,6 @@ Considerations:
 
 > Improve startup time by making the classes of an application instantly available, in a loaded and linked state, when the HotSpot Java Virtual Machine starts. Achieve this by monitoring the application during one run and storing the loaded and linked forms of all classes in a cache for use in subsequent runs. Lay a foundation for future improvements to both startup and warmup time.
 
----
-
-```xml {all}
-<plugin>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-maven-plugin</artifactId>
-    <executions>
-        <execution>
-            <id>process-aot</id>
-            <goals>
-                <goal>process-aot</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-```
 
 ---
 
@@ -603,22 +587,6 @@ Let's push it even further and use the builds of premain in Leyden!
 
 <sub>We will be happy to get your feedback on what's broken!</sub>
 
----
-
-```xml {all}
-<plugin>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-maven-plugin</artifactId>
-    <executions>
-        <execution>
-            <id>process-aot</id>
-            <goals>
-                <goal>process-aot</goal>
-            </goals>
-        </execution>
-    </executions>
-</plugin>
-```
 
 ---
 
